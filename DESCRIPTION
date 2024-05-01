@@ -1,0 +1,39 @@
+Package: traderlab
+Title: Fast trading systems design
+Version: 0.0.0.9000
+Authors@R: 
+    person("Jesús", "Martín de la Sierra", , "jesus.martinsierra@gmail.com", role = c("aut", "cre"))
+Description: This package allows a fast design, backtesting and analysis of trading strategies.
+License: MIT + file LICENSE
+Encoding: UTF-8
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.2.3
+Imports: 
+    cowplot,
+    DBI,
+    dplyr,
+    forcats,
+    ggdist,
+    ggforce,
+    ggplot2,
+    glue,
+    gt,
+    highcharter,
+    ids,
+    lubridate,
+    pbapply,
+    pracma,
+    quantmod,
+    RSQLite,
+    scales,
+    slider,
+    stringr,
+    tibble,
+    tidyr,
+    TTR,
+    xts,
+    yaml,
+    zoo
+Suggests: 
+    testthat (>= 3.0.0)
+Config/testthat/edition: 3
