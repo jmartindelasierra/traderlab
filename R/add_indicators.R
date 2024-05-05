@@ -33,7 +33,9 @@ add_indicators <- function(ohlcv_data, model) {
           },
           indicator_params)
 
+      ohlcv_data <<- do.call(data.frame, ohlcv_data)
+
   })
 
-  do.call(data.frame, ohlcv_data)
+  ohlcv_data
 }
