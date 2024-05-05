@@ -44,7 +44,7 @@ This current version has a series of limitations since it has been
 developed for a specific need and might not be suitable for other uses.
 Here are the most important ones:
 
--   Only Binance and Yahoo data retrieval is implemented so far. Other
+-   Only Binance and Yahoo data download is implemented so far. Other
     sources and datasets are technically possible as long as they
     contain OHLCV data and this is provided in the expected format.
 
@@ -109,7 +109,7 @@ devtools::install_github("jmartindelasierra/traderlab")
 
 ### Binance
 
-Binance data can be retrieved with the `get_binance_ohlcv_data()`
+Binance data can be downloaded with the `get_binance_ohlcv_data()`
 function.
 
 This function downloads all the available files in the Binance
@@ -401,7 +401,11 @@ target:
 steps:
   ema1_periods: [40, 50, 5]
   ema2_periods: [90, 100, 5]
+  
 ```
+
+**Note: if you work with a Unix based system, you might require a
+newline at the end of your document to avoid an error.**
 
 Let’s comment the setup:
 
@@ -583,9 +587,9 @@ balances() |>
     timings()
 ```
 
-The output retrieves information about the total time covered by the
-dataset and the time per scope. In the example, the total duration of
-the dataset is about 6 years and 3 months. The in-sample period has a
+The output shows information about the total time covered by the dataset
+and the time per scope. In the example, the total duration of the
+dataset is about 6 years and 3 months. The in-sample period has a
 duration of 5 years and represents almost an 80% of the data. The
 out-of-sample period has a duration of 1 year and 3 months, and
 represents a 20% of the data:
@@ -601,11 +605,11 @@ $scope_time
 2   oos 2023-01-01 04:59:59 2024-04-01 01:59:59 1y 3m -1d 21H 0M 0S  2736 0.2000585
 ```
 
-The next commands retrieves information about the signals. The
-`signals()` function requires the number of step this time. The variable
-assignment from the `run_model()` is useful here. Since we are
-interested in the best step from the backtest execution, we will get it
-by simply calling `run$step`:
+The next commands shows information about the signals. The `signals()`
+function requires the number of step this time. The variable assignment
+from the `run_model()` is useful here. Since we are interested in the
+best step from the backtesting execution, we will get it by simply
+calling `run$step`:
 
 ``` r
 balances() |>
