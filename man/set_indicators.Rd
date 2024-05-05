@@ -4,10 +4,12 @@
 \alias{set_indicators}
 \title{Set indicators to OHLCV data}
 \usage{
-set_indicators(model_file, step = 1)
+set_indicators(model_file, add_signals = FALSE, step = 1)
 }
 \arguments{
 \item{model_file}{A string with the name of the YAML file describing the model.}
+
+\item{add_signals}{A boolean to indicate whether or not to process signals.}
 
 \item{step}{An integer with the model step,}
 }

@@ -2,11 +2,12 @@
 #' Set indicators to OHLCV data
 #'
 #' @param model_file A string with the name of the YAML file describing the model.
+#' @param add_signals A boolean to indicate whether or not to process signals.
 #' @param step An integer with the model step,
 #'
 #' @export
 #'
-set_indicators <- function(model_file, step = 1) {
+set_indicators <- function(model_file, add_signals = FALSE, step = 1) {
 
   if (missing(model_file) || is.null(model_file))
     stop("'model_file' must be provided.", call. = FALSE)
@@ -25,6 +26,11 @@ set_indicators <- function(model_file, step = 1) {
   ohlcv_data <- load_ohlcv(model$description$data)
   is_ohlcv(ohlcv_data)
 
+  if (is.null(add_signals))
+    stop("'add_signals' must be provided.", call. = FALSE)
+  if (!is.logical(add_signals))
+    stop("'add_signals must be logical.", call. = FALSE)
+
   if (is.null(step))
     stop("'step' must be provided.", call. = FALSE)
   if (!is.numeric(step))
@@ -38,14 +44,19 @@ set_indicators <- function(model_file, step = 1) {
   st <- get_model_steps(model)
   model_step <- set_step_values(model, st, step)
   ohlcv_data <- add_indicators(ohlcv_data, model_step)
-  ohlcv_data <- add_signals(ohlcv_data, model_step)
-  ohlcv_data <- add_sl_price(ohlcv_data, model_step)
-  ohlcv_data$bars_from_entry <- NULL
 
-  if (!is.null(ohlcv_data$stop_loss_price)) {
-    ohlcv_data <-
-      ohlcv_data |>
-      dplyr::relocate(stop_loss_price, .after = entry_price)
+  if (add_signals) {
+
+    ohlcv_data <- add_signals(ohlcv_data, model_step)
+    ohlcv_data <- add_sl_price(ohlcv_data, model_step)
+    ohlcv_data$bars_from_entry <- NULL
+
+    if (!is.null(ohlcv_data$stop_loss_price)) {
+      ohlcv_data <-
+        ohlcv_data |>
+        dplyr::relocate(stop_loss_price, .after = entry_price)
+    }
+
   }
 
   ohlcv_data
