@@ -7,7 +7,6 @@
 custom_indicator <- function(ohlcv_data, expression) {
 
   tryCatch({
-    expression <- stringr::str_replace_all(expression, "(?<=[A-z0-9])\\.(?=[A-z])", "$")
     expr_parsed <- parse(text = expression)
     custom <- with(ohlcv_data, eval(expr_parsed))
   },
