@@ -11,9 +11,9 @@ plot_trades(model_file, step = 1, from = NULL, to = NULL, show_trades = TRUE)
 
 \item{step}{An integer with the model step to plot.}
 
-\item{from}{A string with date formated as yyyy-mm-dd.}
+\item{from}{A string with date formatted as yyyy-mm-dd.}
 
-\item{to}{A string with date formated as yyyy-mm-dd.}
+\item{to}{A string with date formatted as yyyy-mm-dd.}
 
 \item{show_trades}{A boolean indicating whether or not show the trades.}
 }

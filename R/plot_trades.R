@@ -3,15 +3,16 @@
 #'
 #' @param model_file A string with the name of the YAML file describing the model.
 #' @param step An integer with the model step to plot.
-#' @param from A string with date formated as yyyy-mm-dd.
-#' @param to A string with date formated as yyyy-mm-dd.
+#' @param from A string with date formatted as yyyy-mm-dd.
+#' @param to A string with date formatted as yyyy-mm-dd.
 #' @param show_trades A boolean indicating whether or not show the trades.
 #'
 #' @export
 #'
 plot_trades <- function(model_file, step = 1, from = NULL, to = NULL, show_trades = TRUE) {
 
-  open_time <- close_time <- low <- high <- entry <- exit <- ret <- NULL
+  # Initialization to avoid notes in R CMD check
+  open_time <- close_time <- low <- high <- entry <- exit <- ret <- stop_loss_price <- entry_price <- trade <- NULL
 
   if (!missing(model_file) && !is.null(model_file)) {
     if (!is.character(model_file))
@@ -90,10 +91,10 @@ plot_trades <- function(model_file, step = 1, from = NULL, to = NULL, show_trade
 
   p <-
     ohlcv_data |>
-    ggplot2::ggplot(ggplot2::aes(x = close_time, color = ifelse(close > open, "up", "down"))) +
+    ggplot2::ggplot(ggplot2::aes(x = open_time, color = ifelse(close > open, "up", "down"))) +
     ggplot2::geom_linerange(ggplot2::aes(ymin = low, ymax = high)) +
-    ggplot2::geom_segment(ggplot2::aes(y = open, yend = open, xend = close_time - bar_gap / 3)) +
-    ggplot2::geom_segment(ggplot2::aes(y = close, yend = close, xend = close_time + bar_gap / 3)) +
+    ggplot2::geom_segment(ggplot2::aes(y = open, yend = open, xend = open_time - bar_gap / 3)) +
+    ggplot2::geom_segment(ggplot2::aes(y = close, yend = close, xend = open_time + bar_gap / 3)) +
     ggplot2::scale_y_continuous(labels = scales::dollar) +
     ggplot2::scale_colour_manual(values = c("down" = "darkred", "up" = "darkgreen")) +
     ggplot2::guides(colour = "none") +
@@ -112,11 +113,15 @@ plot_trades <- function(model_file, step = 1, from = NULL, to = NULL, show_trade
 
     ohlcv_data$ret <- rev(zoo::na.locf0(rev(ohlcv_data$ret)))
 
+    ohlcv_data <-
+      ohlcv_data |>
+      dplyr::mutate(ret = ifelse(exit, NA, ret))
+
     p <-
       p +
-      ggplot2::geom_point(data = ohlcv_data |> dplyr::filter(entry), ggplot2::aes(y = close), shape = 24, fill = "green", color = "black") +
-      ggplot2::geom_point(data = ohlcv_data |> dplyr::filter(exit), ggplot2::aes(y = close), shape = 25, fill = "red", color = "black") +
-      ggplot2::geom_rect(data = ohlcv_data, ggplot2::aes(xmin = close_time, xmax = c(utils::tail(close_time, -1), utils::tail(close_time, 1)), ymin = -Inf, ymax = Inf, fill = ret), alpha = 0.3, color = NA, show.legend = FALSE) +
+      ggplot2::geom_point(data = ohlcv_data |> dplyr::filter(entry, trade), ggplot2::aes(y = close), shape = 24, fill = "green", color = "black") +
+      ggplot2::geom_point(data = ohlcv_data |> dplyr::filter(exit, trade), ggplot2::aes(y = close), shape = 25, fill = "red", color = "black") +
+      ggplot2::geom_rect(data = ohlcv_data, ggplot2::aes(xmin = open_time, xmax = c(utils::tail(open_time, -1), utils::tail(open_time, 1)), ymin = -Inf, ymax = Inf, fill = ret), alpha = 0.3, color = NA, show.legend = FALSE) +
       ggplot2::scale_fill_manual(values = c("win" = "green", "loss" = "red", "n/a" = NA), na.value = NA)
   }
 
