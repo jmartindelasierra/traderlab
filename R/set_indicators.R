@@ -9,6 +9,9 @@
 #'
 set_indicators <- function(model_file, add_signals = FALSE, step = 1) {
 
+  # Initialization to avoid notes in R CMD check
+  stop_loss_price <- entry_price <- NULL
+
   if (missing(model_file) || is.null(model_file))
     stop("'model_file' must be provided.", call. = FALSE)
   if (!is.character(model_file))
