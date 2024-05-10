@@ -151,11 +151,11 @@ Despite not providing functions for downloading data from different
 sources than Binance and Yahoo, there is not technical inconvenient to
 use other sources.
 
-As you have probably guessed, traderlab works with OHLCV data, that is,
-data for `open`, `high`, `low` and `close` prices, and `volume`. Two
-additional features are also required: `open_time` and `close_time`. So,
-if you want to use other datasets, ensure you can provide to traderlab a
-`data.frame` in `.rds` format with the following columns:
+As you have probably guessed, traderlab works with `open`, `high`, `low`
+and `close` prices, and `volume` data. Two additional features are also
+required: `open_time` and `close_time`. So, if you want to use other
+datasets, ensure you can provide to traderlab a `data.frame` in `.rds`
+format with the following columns:
 
 | column     | class   |
 |:-----------|:--------|
@@ -849,6 +849,7 @@ indicators:
     -   **din**: negative direction index
     -   **dx**: direction index
     -   **adx**: average direction index (trend strength)
+-   Range: \[0, 100\]
 
 Example:
 
@@ -1082,6 +1083,7 @@ indicators:
 ### Internal Bar Strength (IBS)
 
 -   Output: 100 \* (close - low) / (high - low)
+-   Range: \[0, 100\]
 
 Example:
 
@@ -1195,6 +1197,7 @@ indicators:
 -   Outputs:
     -   **macd**
     -   **signal**
+-   Range: \[-n, n\]
 
 Example:
 
@@ -1228,6 +1231,7 @@ indicators:
 -   Outputs:
     -   **ppo**: 100 \* (fast EMA - slow EMA) / slow EMA
     -   **hist**: PPO - signal EMA
+-   Range: \[-n, n\]
 
 Example:
 
@@ -1266,8 +1270,8 @@ indicators:
 
 -   Parameters:
     -   **source**: open, high, low or close
-    -   **start**
-    -   **end**
+    -   **start**: start hour 0-23
+    -   **end**: end hour 0-23
 
 Example:
 
@@ -1286,8 +1290,8 @@ indicators:
 
 -   Parameters:
     -   **source**: open, high, low or close
-    -   **start**
-    -   **end**
+    -   **start**: start hour 0-23
+    -   **end**: end hour 0-23
 
 Example:
 
@@ -1308,6 +1312,7 @@ indicators:
     -   **source**: open, high, low or close
     -   **periods**
 -   Output: 100 - 100 / (1 + (average wins / average losses))
+-   Range: \[0, 100\]
 
 Example:
 
@@ -1379,6 +1384,7 @@ indicators:
     -   **periods**
 -   Output: ((highest high - close) / (highest high - lowest low)) \*
     (- 100)
+-   Range: \[-100, 0\]
 
 Example:
 
@@ -1402,6 +1408,7 @@ indicators:
 
 -   Function: pct_return
 -   Output: (final balance - initial balance) / initial balance
+-   Range: \[0, 1\]
 
 ### Compound Annual Growth Rate (CAGR)
 
@@ -1412,6 +1419,7 @@ indicators:
 
 -   Function: win_rate
 -   Output: winning trades / total trades
+-   Range: \[0, 1\]
 
 ### Profit factor
 
@@ -1431,7 +1439,7 @@ indicators:
 
 Stop loss is required to compute this metric.
 
-### Average bars per trade
+### Average bars
 
 -   Function: avg_bars
 -   Output: mean(trade durations)
@@ -1466,6 +1474,7 @@ Stop loss is required to compute this metric.
 
 -   Function: pct_dd
 -   Output: max(drawdown)
+-   Range: \[-1, 0\]
 
 ### Return / drawdown
 
@@ -1486,6 +1495,7 @@ Stop loss is required to compute this metric.
 
 -   Function: r_squared
 -   Output: R² statistic from linear regression
+-   Range: \[-1, 1\]
 
 ### K-ratio
 
