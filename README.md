@@ -998,6 +998,22 @@ indicators:
 
 <img src="man/figures/README-Donchian.png"/>
 
+### Down in a row
+
+-   Parameter:
+    -   **source**
+    -   **periods**
+
+Example:
+
+``` yaml
+indicators:
+  dir:
+    indicator: down_in_row
+    source: close
+    periods: 3
+```
+
 ### Exponential Moving Average (EMA)
 
 -   Parameters:
@@ -1357,6 +1373,22 @@ indicators:
 ```
 
 <img src="man/figures/README-TR.png"/>
+
+### Up in a row
+
+-   Parameter:
+    -   **source**
+    -   **periods**
+
+Example:
+
+``` yaml
+indicators:
+  dir:
+    indicator: up_in_row
+    source: close
+    periods: 3
+```
 
 ### Volume-Weighted Average Price (VWAP)
 
