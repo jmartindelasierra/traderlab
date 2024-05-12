@@ -1384,7 +1384,7 @@ Example:
 
 ``` yaml
 indicators:
-  dir:
+  uir:
     indicator: up_in_row
     source: close
     periods: 3
