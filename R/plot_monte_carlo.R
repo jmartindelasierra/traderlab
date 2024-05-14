@@ -431,15 +431,15 @@ plot_monte_carlo <- function(step, scope = "is", samples = 500, replace = TRUE, 
   print.data.frame(
     rbind(
       original,
-      data.frame(cagr = -stats::quantile(-cagrs, probs = c(0.5, 0.6, 0.7, 0.8, 0.9, 0.95)),
-                 win_rate = -stats::quantile(-win_rates, probs = c(0.5, 0.6, 0.7, 0.8, 0.9, 0.95)),
-                 profit_factor = -stats::quantile(-profit_factors, probs = c(0.5, 0.6, 0.7, 0.8, 0.9, 0.95)),
-                 max_consec_losses = stats::quantile(max_consec_losses, probs = c(0.5, 0.6, 0.7, 0.8, 0.9, 0.95)),
-                 pct_dd = -stats::quantile(-pct_drawdowns, probs = c(0.5, 0.6, 0.7, 0.8, 0.9, 0.95)),
-                 return_dd = -stats::quantile(-returns_dd, probs = c(0.5, 0.6, 0.7, 0.8, 0.9, 0.95)),
-                 sharpe_ratio = -stats::quantile(-sharpes, probs = c(0.5, 0.6, 0.7, 0.8, 0.9, 0.95)),
-                 r_squared = -stats::quantile(-r_squares, probs = c(0.5, 0.6, 0.7, 0.8, 0.9, 0.95)),
-                 var = -stats::quantile(-vars, probs = c(0.5, 0.6, 0.7, 0.8, 0.9, 0.95)))
+      data.frame(cagr = -stats::quantile(-cagrs, probs = c(0.5, 0.6, 0.7, 0.8, 0.9, 0.95), na.rm = TRUE),
+                 win_rate = -stats::quantile(-win_rates, probs = c(0.5, 0.6, 0.7, 0.8, 0.9, 0.95), na.rm = TRUE),
+                 profit_factor = -stats::quantile(-profit_factors, probs = c(0.5, 0.6, 0.7, 0.8, 0.9, 0.95), na.rm = TRUE),
+                 max_consec_losses = stats::quantile(max_consec_losses, probs = c(0.5, 0.6, 0.7, 0.8, 0.9, 0.95), na.rm = TRUE),
+                 pct_dd = -stats::quantile(-pct_drawdowns, probs = c(0.5, 0.6, 0.7, 0.8, 0.9, 0.95), na.rm = TRUE),
+                 return_dd = -stats::quantile(-returns_dd, probs = c(0.5, 0.6, 0.7, 0.8, 0.9, 0.95), na.rm = TRUE),
+                 sharpe_ratio = -stats::quantile(-sharpes, probs = c(0.5, 0.6, 0.7, 0.8, 0.9, 0.95), na.rm = TRUE),
+                 r_squared = -stats::quantile(-r_squares, probs = c(0.5, 0.6, 0.7, 0.8, 0.9, 0.95), na.rm = TRUE),
+                 var = -stats::quantile(-vars, probs = c(0.5, 0.6, 0.7, 0.8, 0.9, 0.95), na.rm = TRUE))
     ) |> round(2)
   )
 
