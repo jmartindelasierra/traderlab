@@ -43,7 +43,7 @@ capital_flow <- function(position,
       end_capital <-
         in_use_capital + (
           (in_use_capital * pct_buy_sell) -
-            fee) * leverage + remain_capital
+            fee) * leverage + remain_capital # fixed fee is also leveraged
     }
   } else if (position == "short") {
     if (fee_type == "per_trade_pct") {
@@ -55,7 +55,7 @@ capital_flow <- function(position,
       end_capital <-
         in_use_capital + (
           -(in_use_capital * pct_buy_sell) -
-            fee) * leverage + remain_capital
+            fee) * leverage + remain_capital # fixed fee is also leveraged
     }
   }
 
@@ -68,7 +68,7 @@ capital_flow <- function(position,
   if (fee_type == "per_trade_pct") {
     fees <- (in_use_capital * fee) * leverage
   } else if (fee_type == "per_trade_fixed") {
-    fees <- fee * leverage
+    fees <- fee * leverage # fixed fee is also leveraged
   }
 
   list(start = current_capital, end = end_capital, return = return, pct_return = pct_return, fees = fees)
