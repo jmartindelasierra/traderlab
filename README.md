@@ -107,6 +107,11 @@ install.packages("devtools")
 devtools::install_github("jmartindelasierra/traderlab")
 ```
 
+In the DESCRIPTION file you can see that traderlab has many
+dependencies. If your installation fails and you get lost in the output
+messages, then be patient and install the dependencies one by one so you
+can focus on the failing dependency.
+
 ## Data download
 
 ### Binance
