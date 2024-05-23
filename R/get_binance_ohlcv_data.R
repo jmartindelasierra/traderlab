@@ -31,11 +31,10 @@ get_binance_ohlcv_data <- function(symbol, timeframe) {
   if (!timeframe %in% timeframes)
     stop("Invalid 'timeframe'.", call. = FALSE)
 
-  # Make pair
-  pair <- glue::glue(toupper(symbol), "USDT")
+  symbol <- toupper(symbol)
 
   # Repository URL
-  url <- glue::glue("https://data.binance.vision/data/spot/monthly/klines/{pair}/{timeframe}/")
+  url <- glue::glue("https://data.binance.vision/data/spot/monthly/klines/{symbol}/{timeframe}/")
 
   # Make file names
   years <- 2017:format(Sys.Date(), "%Y")
@@ -44,7 +43,7 @@ get_binance_ohlcv_data <- function(symbol, timeframe) {
   files <-
     expand.grid(years, months) |>
     dplyr::arrange(Var1) |>
-    dplyr::mutate(file = glue::glue("{pair}-{timeframe}-{Var1}-{Var2}.zip")) |>
+    dplyr::mutate(file = glue::glue("{symbol}-{timeframe}-{Var1}-{Var2}.zip")) |>
     dplyr::pull(file)
 
   # First 7 months of 2017 are not available in Binance
@@ -56,7 +55,7 @@ get_binance_ohlcv_data <- function(symbol, timeframe) {
   # Initialize vector for files not downloaded
   files_not_downloaded <- c()
 
-  message(glue::glue("Downloading {pair} data..."))
+  message(glue::glue("Downloading {symbol} data..."))
 
   # Download and unzip
   pbapply::pblapply(files, function(x) {
@@ -118,5 +117,5 @@ get_binance_ohlcv_data <- function(symbol, timeframe) {
   }
 
   # Save OHLCV data as .RDS file
-  saveRDS(ohlcv, file = glue::glue("{getwd()}/datasets/{tolower(pair)}_{timeframe}.rds"))
+  saveRDS(ohlcv, file = glue::glue("{getwd()}/datasets/{tolower(symbol)}_{timeframe}.rds"))
 }
