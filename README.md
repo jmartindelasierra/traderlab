@@ -126,7 +126,7 @@ saved in `./datasets` from your working folder.
 The following example downloads the 4-hour history for Bitcoin/USDT:
 
 ``` r
-get_binance_ohlcv_data(symbol = "BTC", timeframe = "4h")
+get_binance_ohlcv_data(symbol = "BTCUSDT", timeframe = "4h")
 ```
 
 After the download, the file `btcusdt_4h.rds` will be available in
@@ -367,7 +367,7 @@ version: 1
 
 description:
   name: Basic EMA crossover
-  symbol: BTC
+  symbol: BTCUSDT
   timeframe: 4h
   data: ./datasets/btcusdt_4h.rds
 
@@ -1440,39 +1440,39 @@ indicators:
 
 ### Number of trades
 
--   Function: trades
+-   Name: trades
 -   Output: number of closed trades
 
 ### Return %
 
--   Function: pct_return
+-   Name: pct_return
 -   Output: (final balance - initial balance) / initial balance
 -   Range: \[0, 1\]
 
 ### Compound Annual Growth Rate (CAGR)
 
--   Function: cagr
+-   Name: cagr
 -   Output: (final balance / initial balance)^(1 / years) - 1
 
 ### Win rate
 
--   Function: win_rate
+-   Name: win_rate
 -   Output: winning trades / total trades
 -   Range: \[0, 1\]
 
 ### Profit factor
 
--   Function: profit_factor
+-   Name: profit_factor
 -   Output: sum(positive returns) / \|sum(negative returns)\|
 
 ### Wins-to-Losses ratio
 
--   Function: wl_ratio
+-   Name: wl_ratio
 -   Output: number of positive returns / number of negative returns
 
 ### Risk-to-Reward ratio
 
--   Function: rr_ratio
+-   Name: rr_ratio
 -   Output: mean(r_multiples), where r_multiples = (target price - entry
     price) / (entry price - stop loss price)
 
@@ -1480,71 +1480,71 @@ Stop loss is required to compute this metric.
 
 ### Average bars
 
--   Function: avg_bars
+-   Name: avg_bars
 -   Output: mean(trade durations)
 
 ### Exposure
 
--   Function: exposure
+-   Name: exposure
 -   Output: number of trading bars / total bars
 
 ### Expectancy
 
--   Function: expectancy
+-   Name: expectancy
 -   Output: win % \* mean(positive returns) - loss % \* \|mean(negative
     returns)\|
 
 ### Maximum consecutive wins
 
--   Function: max_consec_wins
+-   Name: max_consec_wins
 -   Output: number of consecutive trades with positive return
 
 ### Maximum consecutive losses
 
--   Function: max_consec_losses
+-   Name: max_consec_losses
 -   Output: number of consecutive trades with negative return
 
 ### Risk-adjusted return
 
--   Function: risk_adj_return
+-   Name: risk_adj_return
 -   Output: total % return / exposure
 
 ### Maximum drawdown %
 
--   Function: pct_dd
+-   Name: pct_dd
 -   Output: max(drawdown)
 -   Range: \[-1, 0\]
 
 ### Return / drawdown
 
--   Function: return_dd
+-   Name: return_dd
 -   Output: (final balance - initial balance) / max(drawdown)
 
 ### CAGR / drawdown
 
--   Function: cagr_dd
+-   Name: cagr_dd
 -   Output: CAGR / max(drawdown)
 
 ### Sharpe ratio (annual and 5% risk-free rate benchmark)
 
--   Function: sharpe_ratio
+-   Name: sharpe_ratio
 -   Output: (mean(annual returns) - risk-free rate) / sd(annual returns)
 
 ### R²
 
--   Function: r_squared
+-   Name: r_squared
 -   Output: R² statistic from linear regression
 -   Range: \[-1, 1\]
 
 ### K-ratio
 
--   Function: k_ratio
+-   Name: k_ratio
 -   Output: slope of regression line / (standard error of slope \* total
     bars)
 
 ### System Quality Number (SQN)
 
--   Function: sqn
+-   Name: sqn
 -   Output: (mean(r multiples) / sd(r multiples)) \* sqrt(if(number of
     trades > 100, number of trades, 100), where r_multiples = (target
     price - entry price) / (entry price - stop loss price)
@@ -1553,12 +1553,12 @@ Stop loss is required to compute this metric.
 
 ### Monthly Value-at-Risk
 
--   Function: var
+-   Name: var
 -   Output: 5th percentile of monthly returns
 
 ### Monthly Conditional Value-at-Risk
 
--   Function: cvar
+-   Name: cvar
 -   Output: mean under 5th percentile of monthly returns
 
 ------------------------------------------------------------------------
