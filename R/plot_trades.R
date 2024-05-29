@@ -91,10 +91,10 @@ plot_trades <- function(model_file, step = 1, from = NULL, to = NULL, show_trade
 
   p <-
     ohlcv_data |>
-    ggplot2::ggplot(ggplot2::aes(x = open_time, color = ifelse(close > open, "up", "down"))) +
-    ggplot2::geom_linerange(ggplot2::aes(ymin = low, ymax = high)) +
-    ggplot2::geom_segment(ggplot2::aes(y = open, yend = open, xend = open_time - bar_gap / 3)) +
-    ggplot2::geom_segment(ggplot2::aes(y = close, yend = close, xend = open_time + bar_gap / 3)) +
+    ggplot2::ggplot() +
+    ggplot2::geom_linerange(ggplot2::aes(x = open_time, ymin = low, ymax = high, color = ifelse(close > open, "up", "down"))) +
+    ggplot2::geom_segment(ggplot2::aes(x = open_time, y = open, yend = open, xend = open_time - bar_gap / 3, color = ifelse(close > open, "up", "down"))) +
+    ggplot2::geom_segment(ggplot2::aes(x = open_time, y = close, yend = close, xend = open_time + bar_gap / 3, color = ifelse(close > open, "up", "down"))) +
     ggplot2::scale_y_continuous(labels = scales::dollar) +
     ggplot2::scale_colour_manual(values = c("down" = "darkred", "up" = "darkgreen")) +
     ggplot2::guides(colour = "none") +
@@ -119,8 +119,8 @@ plot_trades <- function(model_file, step = 1, from = NULL, to = NULL, show_trade
 
     p <-
       p +
-      ggplot2::geom_point(data = ohlcv_data |> dplyr::filter(entry, trade), ggplot2::aes(y = close), shape = 24, fill = "green", color = "black") +
-      ggplot2::geom_point(data = ohlcv_data |> dplyr::filter(exit, trade), ggplot2::aes(y = close), shape = 25, fill = "red", color = "black") +
+      ggplot2::geom_point(data = ohlcv_data |> dplyr::filter(entry, trade), ggplot2::aes(x = open_time, y = close), shape = 24, fill = "green", color = "black") +
+      ggplot2::geom_point(data = ohlcv_data |> dplyr::filter(exit, trade), ggplot2::aes(x = open_time, y = close), shape = 25, fill = "red", color = "black") +
       ggplot2::geom_rect(data = ohlcv_data, ggplot2::aes(xmin = open_time, xmax = c(utils::tail(open_time, -1), utils::tail(open_time, 1)), ymin = -Inf, ymax = Inf, fill = ret), alpha = 0.3, color = NA, show.legend = FALSE) +
       ggplot2::scale_fill_manual(values = c("win" = "green", "loss" = "red", "n/a" = NA), na.value = NA)
   }
