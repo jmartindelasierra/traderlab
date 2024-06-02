@@ -495,8 +495,8 @@ plot_trades(model = "./models/basic_ema_xover.yml",
             from = "2024-01-01",
             to = "2024-03-31",
             show_trades = FALSE) +
-    geom_line(aes(y = ema1), color = "steelblue3") +
-    geom_line(aes(y = ema2), color = "orange3")
+    geom_line(aes(x = close_time, y = ema1), color = "steelblue3") +
+    geom_line(aes(x = close_time, y = ema2), color = "orange3")
 ```
 
 <img src="man/figures/README-plot_trades-1.png"/>
