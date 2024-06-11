@@ -11,9 +11,11 @@ get_in_sample_metrics <- function(ohlcv_data, model) {
 
   max_date <- as.character(as.Date(max(ohlcv_data$close_time)))
 
+  oos_start <- model$periods$oos_start
+
   os_data <-
     ohlcv_data |>
-    dplyr::filter(open_time >= model$periods$oos_start)
+    dplyr::filter(open_time >= oos_start)
 
   is_ohlc <-
     ohlcv_data |>
