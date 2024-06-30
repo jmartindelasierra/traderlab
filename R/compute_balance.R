@@ -7,7 +7,7 @@
 compute_balance <- function(ohlcv_data, model) {
 
   # Initialization to avoid notes in R CMD check
-  balance0 <- open_time <- ret <- NULL
+  balance0 <- open_time <- first_close <- pct_balance0 <- pct_exc <- first_pct_balance0 <- close_time <- ret <- NULL
 
   position <- model$management$position
   start_capital <- model$management$start_capital
@@ -49,6 +49,50 @@ compute_balance <- function(ohlcv_data, model) {
   ohlcv_data$pct_return[1] <- 0
 
   ohlcv_data <- compute_drawdown(ohlcv_data)
+
+  # Excursions
+  trade_index <- c()
+  trade_counter <- 0
+  trade_in_progress <- FALSE
+
+  for (i in 1:nrow(ohlcv_data)) {
+
+    if (ohlcv_data$entry[i] == 1) {
+      trade_counter <- trade_counter + 1
+      trade_in_progress <- TRUE
+    }
+
+    if (!ohlcv_data$trade[i]) {
+      trade_in_progress <- FALSE
+    }
+
+    if (trade_in_progress) {
+      trade_index[i] <- trade_counter
+    } else {
+      trade_index[i] <- NA
+    }
+
+  }
+
+  ohlcv_data$trade_index <- trade_index
+
+  pct_exc_balance0 <-
+    ohlcv_data |>
+    dplyr::filter(trade_index > 0) |>
+    dplyr::group_by(trade_index) |>
+    dplyr::mutate(t = 1:dplyr::n(),
+                  first_close = dplyr::first(close),
+                  pct_exc = model$management$leverage * (((close - first_close) / first_close) - model$management$fee),
+                  first_pct_balance0 = dplyr::first(pct_balance0),
+                  pct_exc_balance0 = ifelse(t == max(t), pct_balance0, pct_exc + first_pct_balance0)) |>
+    dplyr::ungroup() |>
+    dplyr::select(close_time, pct_exc_balance0)
+
+  ohlcv_data <-
+    merge(ohlcv_data, # |> dplyr::select(-trade_index),
+          pct_exc_balance0,
+          by = "close_time",
+          all = TRUE)
 
   ohlcv_data <-
     ohlcv_data |>
