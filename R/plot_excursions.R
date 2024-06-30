@@ -8,7 +8,7 @@
 plot_excursions <- function(step) {
 
   # Initialization to avoid notes in R CMD check
-  time <- trade <- ret <- bars_from_entry <- type <- mae <- NULL
+  time <- trade <- ret <- bars_from_entry <- type <- mae <- trade_index <- pct_exc_balance0 <- pct_exc0 <- NULL
 
   if (missing(step) || is.null(step))
     stop("'step' must be provided.", call. = FALSE)
@@ -38,46 +38,55 @@ plot_excursions <- function(step) {
     dplyr::mutate(time = as.POSIXct(time, origin = "1970-01-01"),
                   trade = ifelse(trade == 1, TRUE, FALSE))
 
-  trade_index <- c()
-  trade_counter <- 0
-  trade_in_progress <- FALSE
+  # trade_index <- c()
+  # trade_counter <- 0
+  # trade_in_progress <- FALSE
+  #
+  # for (i in 1:nrow(balance)) {
+  #
+  #   if (balance$entry[i] == 1) {
+  #     trade_counter <- trade_counter + 1
+  #     trade_in_progress <- TRUE
+  #   }
+  #
+  #   if (!balance$trade[i]) {
+  #     trade_in_progress <- FALSE
+  #   }
+  #
+  #   if (trade_in_progress) {
+  #     trade_index[i] <- trade_counter
+  #   } else {
+  #     trade_index[i] <- NA
+  #   }
+  #
+  # }
+  #
+  # balance$trade_index <- trade_index
 
-  for (i in 1:nrow(balance)) {
-
-    if (balance$entry[i] == 1) {
-      trade_counter <- trade_counter + 1
-      trade_in_progress <- TRUE
-    }
-
-    if (!balance$trade[i]) {
-      trade_in_progress <- FALSE
-    }
-
-    if (trade_in_progress) {
-      trade_index[i] <- trade_counter
-    } else {
-      trade_index[i] <- NA
-    }
-
-  }
-
-  balance$trade_index <- trade_index
+  # balance <-
+  #   balance |>
+  #   dplyr::filter(trade_index > 0) |>
+  #   dplyr::group_by(trade_index) |>
+  #   dplyr::mutate(t = 1:dplyr::n(),
+  #                 open = dplyr::first(close),
+  #                 ret = (close - open) / open,
+  #                 type = ifelse(dplyr::last(ret) >= 0, "winner", "loser")) |>
+  #   dplyr::ungroup()
 
   balance <-
     balance |>
     dplyr::filter(trade_index > 0) |>
     dplyr::group_by(trade_index) |>
-    dplyr::mutate(t = 1:dplyr::n(),
-                  open = dplyr::first(close),
-                  ret = (close - open) / open,
-                  type = ifelse(dplyr::last(ret) >= 0, "winner", "loser")) |>
+    dplyr::mutate(pct_exc0 = dplyr::first(pct_exc_balance0),
+                  pct_exc0 = (pct_exc_balance0 - pct_exc0),
+                  type = ifelse(dplyr::last(pct_exc0) >=0, "winner", "loser")) |>
     dplyr::ungroup()
 
   p1 <-
     balance |>
     ggplot2::ggplot() +
-    ggplot2::geom_line(ggplot2::aes(x = bars_from_entry, y = ret, group = trade_index, color = type), alpha = 0.5, show.legend = FALSE) +
-    # ggplot2::geom_smooth(ggplot2::aes(x = bars_from_entry, y = ret, color = type), method = "lm", formula = y ~ x, se = FALSE, show.legend = FALSE) +
+    ggplot2::geom_line(ggplot2::aes(x = bars_from_entry, y = pct_exc0, group = trade_index, color = type), alpha = 0.5, show.legend = FALSE) +
+    # ggplot2::geom_smooth(ggplot2::aes(x = bars_from_entry, y = pct_exc0, color = type), method = "lm", formula = y ~ x, se = FALSE, show.legend = FALSE) +
     ggplot2::geom_hline(yintercept = 0) +
     ggplot2::scale_y_continuous(labels = scales::percent) +
     ggplot2::scale_color_manual(values = c("winner" = "forestgreen", "loser" = "firebrick")) +
@@ -98,9 +107,9 @@ plot_excursions <- function(step) {
 
   p3 <-
     balance |>
-    dplyr::filter(ret < 0) |>
+    dplyr::filter(pct_exc0 < 0) |>
     ggplot2::ggplot() +
-    ggplot2::geom_histogram(ggplot2::aes(x = ret, fill = type), bins = 30, alpha = 0.8, show.legend = FALSE) +
+    ggplot2::geom_histogram(ggplot2::aes(x = pct_exc0, fill = type), bins = 30, alpha = 0.8, show.legend = FALSE) +
     ggplot2::scale_x_continuous(labels = scales::percent) +
     ggplot2::scale_fill_manual(values = c("winner" = "forestgreen", "loser" = "firebrick")) +
     ggplot2::theme_bw() +
@@ -110,7 +119,7 @@ plot_excursions <- function(step) {
   p4 <-
     balance |>
     dplyr::group_by(trade_index) |>
-    dplyr::summarise(mae = min(ret),
+    dplyr::summarise(mae = min(pct_exc0),
                      type = dplyr::first(type),
                      pct_return = max(abs(pct_return))) |>
     ggplot2::ggplot() +
