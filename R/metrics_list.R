@@ -20,6 +20,8 @@ metrics_list <- function(ohlcv_data) {
     expectancy = expectancy(returns),
     max_consec_wins = max_consecutive_wins(returns),
     max_consec_losses = max_consecutive_losses(returns),
+    exp_a_ret = expected_annual_return(ohlcv_data),
+    std_a_ret = std_annual_return(ohlcv_data),
     risk_adj_return = risk_adjusted_return(ohlcv_data),
     pct_dd = max_pct_drawdown(ohlcv_data),
     return_dd = return_drawdown_ratio(ohlcv_data),
