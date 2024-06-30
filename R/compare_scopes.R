@@ -20,7 +20,7 @@ compare_scopes <- function(data) {
   step <- unique(data$step)
 
   data <-
-    data |>
+    metrics() |>
     filter_step(step)
 
   merge(data |> filter_scope("is") |> dplyr::mutate(i = 1:dplyr::n()),
