@@ -7,7 +7,7 @@
 
 [![Lifecycle:
 experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html#experimental)
-[![](https://img.shields.io/badge/devel%20version-0.0.0.9000-blue.svg)](https://github.com/jmartindelasierra/traderlab)
+[![](https://img.shields.io/badge/devel%20version-0.0.0.9001-blue.svg)](https://github.com/jmartindelasierra/traderlab)
 <a href="https://www.buymeacoffee.com/jmartindelasierra" target="_blank"><img src="https://img.shields.io/badge/-buy_me_a%C2%A0coffee-gray?logo=buy-me-a-coffee" alt="Buy Me A Coffee"></a>
 <!-- badges: end -->
 
@@ -833,6 +833,30 @@ document.
 
 This is the list of available indicators and their required parameters:
 
+### Aroon
+
+-   Parameter:
+    -   **periods**
+-   Outputs:
+    -   **up**
+    -   **dn**
+    -   **osc**: up - dn
+-   Range:
+    -   **up**: \[0, 100\]
+    -   **dn**: \[0, 100\]
+    -   **osc**: \[-100, 100\]
+
+Example:
+
+``` yaml
+indicators:
+  aroon:
+    indicator: Aroon
+    periods: 6
+```
+
+<img src="man/figures/README-Aroon.png"/>
+
 ### Absolute Range (AR)
 
 -   Output: high - low
@@ -1038,6 +1062,25 @@ indicators:
 ```
 
 <img src="man/figures/README-EMA.png"/>
+
+### Gaussian noise
+
+**This is not an indicator, but it is formulated and applied on the
+OHLCV data in the same way**
+
+-   Parameters:
+    -   **source**
+    -   **pct_dev**: deviation from the source value in %
+
+Example:
+
+``` yaml
+indicators:
+  noised_close:
+    indicator: noise
+    source: close
+    pct_dev: 0.005
+```
 
 ### Highest value
 
@@ -1367,6 +1410,32 @@ indicators:
 
 <img src="man/figures/README-SMA.png"/>
 
+### Stochastic oscillator
+
+-   Parameters:
+    -   **source**: if not provided, source = HLC
+    -   **fast_k\_periods**
+    -   **fast_d\_periods**
+    -   **slow_d\_periods**
+-   Outputs:
+    -   **fastK**
+    -   **fastD**
+    -   **slowD**
+-   Range: \[0, 1\]
+
+Example:
+
+``` yaml
+indicators:
+  stoch:
+    indicator: stochastic
+    fast_k_periods: 13
+    fast_d_periods: 6
+    slow_d_periods: 2
+```
+
+<img src="man/figures/README-stochastic.png"/>
+
 ### True Range (TR)
 
 -   Output: max(high - low, high - close\[-1\], close\[-1\] - low)
@@ -1503,6 +1572,16 @@ Stop loss is required to compute this metric.
 
 -   Name: max_consec_losses
 -   Output: number of consecutive trades with negative return
+
+### Expected annual return
+
+-   Name: exp_a\_ret
+-   Output: mean(annual returns)
+
+### Standard deviation of annual returns
+
+-   Name: std_a\_ret
+-   Output: sd(annual returns)
 
 ### Risk-adjusted return
 
