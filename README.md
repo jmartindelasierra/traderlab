@@ -833,6 +833,20 @@ document.
 
 This is the list of available indicators and their required parameters:
 
+### Absolute Range (AR)
+
+-   Output: high - low
+
+Example:
+
+``` yaml
+indicators:
+  ar:
+    indicator: AR
+```
+
+<img src="man/figures/README-AR.png"/>
+
 ### Aroon
 
 -   Parameter:
@@ -856,20 +870,6 @@ indicators:
 ```
 
 <img src="man/figures/README-Aroon.png"/>
-
-### Absolute Range (AR)
-
--   Output: high - low
-
-Example:
-
-``` yaml
-indicators:
-  ar:
-    indicator: AR
-```
-
-<img src="man/figures/README-AR.png"/>
 
 ### Average Directional Movement Index (ADX)
 
@@ -1076,7 +1076,7 @@ Example:
 
 ``` yaml
 indicators:
-  noised_close:
+  noisy_close:
     indicator: noise
     source: close
     pct_dev: 0.005
