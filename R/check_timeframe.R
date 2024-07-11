@@ -18,7 +18,7 @@ check_timeframe <- function(model, ohlcv_data) {
            "8h" = 480,
            "12h" = 720,
            "1d" = 1440,
-           "1s" = 10080)
+           "1w" = 10080)
 
   ohlc_minutes <-
     difftime(ohlcv_data$close_time[2], ohlcv_data$close_time[1], units = "mins") |>
