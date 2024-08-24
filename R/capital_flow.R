@@ -38,29 +38,30 @@ capital_flow <- function(position,
       end_capital <-
         in_use_capital + (
           (in_use_capital * pct_buy_sell) -
-            (in_use_capital * fee)) * leverage + remain_capital
+            (in_use_capital * fee)) * leverage #+ remain_capital
     } else if (fee_type == "per_trade_fixed") {
       end_capital <-
         in_use_capital + (
           (in_use_capital * pct_buy_sell) -
-            fee) * leverage + remain_capital # fixed fee is also leveraged
+            fee) * leverage #+ remain_capital # fixed fee is also leveraged
     }
   } else if (position == "short") {
     if (fee_type == "per_trade_pct") {
       end_capital <-
         in_use_capital + (
           -(in_use_capital * pct_buy_sell) -
-            (in_use_capital * fee)) * leverage + remain_capital
+            (in_use_capital * fee)) * leverage #+ remain_capital
     } else if (fee_type == "per_trade_fixed") {
       end_capital <-
         in_use_capital + (
           -(in_use_capital * pct_buy_sell) -
-            fee) * leverage + remain_capital # fixed fee is also leveraged
+            fee) * leverage #+ remain_capital # fixed fee is also leveraged
     }
   }
 
-  return <- end_capital - (in_use_capital + remain_capital)
-  pct_return <- return / (in_use_capital + remain_capital)
+  return <- end_capital - in_use_capital
+  pct_return <- (end_capital - in_use_capital) / in_use_capital
+  end_capital <- end_capital + remain_capital
 
   if (end_capital < 0)
     end_capital <- 0
