@@ -10,12 +10,12 @@
 #'
 #' @export
 #'
-plot_monte_carlo <- function(step, scope = "is", samples = 500, replace = TRUE, oos_zoom = FALSE, verbose = TRUE) {
+plot_monte_carlo <- function(step = 1, scope = "is", samples = 500, replace = TRUE, oos_zoom = FALSE, verbose = TRUE) {
 
   # Initialization to avoid notes in R CMD check
   time <- .lower <- .upper <- variable <- value <- NULL
 
-  if (missing(step) || is.null(step))
+  if (is.null(step))
     stop("'step' must be provided.", call. = FALSE)
   if (!is.numeric(step))
     stop("'step' must be numeric.", call. = FALSE)
@@ -105,22 +105,6 @@ plot_monte_carlo <- function(step, scope = "is", samples = 500, replace = TRUE, 
   balance_smp <-
     balance_smp |>
     dplyr::mutate(time = as.POSIXct(time, origin = "1970-01-01"))
-
-  # Recompute balance and drawdowns before calculation of OOS metrics
-  if (scope == "oos") {
-
-    balance_smp <-
-      balance_smp |>
-      dplyr::group_split(sample) |>
-      lapply(function(x) {
-        x$balance <- x$balance - x$balance[1] + balance$balance[1]
-        if (sum(x$balance < 0) >= 1)
-          x$balance[min(which(x$balance < 0)):length(x$balance)] <- 0
-        compute_drawdown(x)
-      })
-
-    balance_smp <- do.call(rbind, balance_smp)
-  }
 
   balance_ci <-
     balance_ci |>
