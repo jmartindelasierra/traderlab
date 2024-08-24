@@ -18,6 +18,7 @@ compute_balance <- function(ohlcv_data, model) {
   fee <- model$management$fee
 
   balance <- start_capital
+  ohlcv_data$pct_return <- NA
   ohlcv_data$balance <- NA
   ohlcv_data$fees <- NA
 
@@ -31,6 +32,7 @@ compute_balance <- function(ohlcv_data, model) {
 
       flow <- capital_flow(position, start_capital, balance, interest_type, reinvest, ohlcv_data$entry_price[i], ohlcv_data$entry_price[i] + ohlcv_data$dif_entry_exit[i], leverage, fee_type, fee)
       balance <- flow$end
+      ohlcv_data$pct_return[i] <- flow$pct_return
       ohlcv_data$balance[i] <- balance
       ohlcv_data$fees[i] <- flow$fees
 
@@ -44,9 +46,9 @@ compute_balance <- function(ohlcv_data, model) {
     dplyr::mutate(balance0 = balance - model$management$start_capital,
                   pct_balance0 = balance0 / model$management$start_capital,
                   ret = balance - dplyr::lag(balance),
-                  pct_return = ret / dplyr::lag(balance))
+                  pct_balance_return = ret / dplyr::lag(balance)) # return % referenced to total capital
 
-  ohlcv_data$pct_return[1] <- 0
+  ohlcv_data$pct_balance_return[1] <- 0
 
   ohlcv_data <- compute_drawdown(ohlcv_data)
 
@@ -86,7 +88,7 @@ compute_balance <- function(ohlcv_data, model) {
                   first_pct_balance0 = dplyr::first(pct_balance0),
                   pct_exc_balance0 = ifelse(t == max(t), pct_balance0, pct_exc + first_pct_balance0)) |>
     dplyr::ungroup() |>
-    dplyr::select(close_time, pct_exc_balance0)
+    dplyr::select(close_time, pct_exc, pct_exc_balance0)
 
   ohlcv_data <-
     merge(ohlcv_data, # |> dplyr::select(-trade_index),
