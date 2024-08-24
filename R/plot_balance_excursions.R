@@ -5,12 +5,12 @@
 #'
 #' @export
 #'
-plot_balance_excursions <- function(step) {
+plot_balance_excursions <- function(step = 1) {
 
   # Initialization to avoid notes in R CMD check
-  time <- pct_balance0 <- pct_exc_balance0 <- trade_index <- pct_exc0 <- NULL
+  pct_balance0 <- pct_exc0 <- pct_exc_balance0 <- time <- trade_index <- NULL
 
-  if (missing(step) || is.null(step))
+  if (is.null(step))
     stop("'step' must be provided.", call. = FALSE)
   if (!is.numeric(step))
     stop("'step' must be integer.", call. = FALSE)
