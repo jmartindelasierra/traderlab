@@ -14,6 +14,7 @@ check_timeframe <- function(model, ohlcv_data) {
            "15m" = 15,
            "30m" = 30,
            "1h" = 60,
+           "2h" = 120,
            "4h" = 240,
            "8h" = 480,
            "12h" = 720,
