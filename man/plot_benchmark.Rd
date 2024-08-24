@@ -4,7 +4,7 @@
 \alias{plot_benchmark}
 \title{Plot a comparison of the specified step in model with the Buy & Hold strategy}
 \usage{
-plot_benchmark(step)
+plot_benchmark(step = 1)
 }
 \arguments{
 \item{step}{n integer with the balance step to plot.}

@@ -4,7 +4,7 @@
 \alias{plot_excursions}
 \title{Plot excursions}
 \usage{
-plot_excursions(step)
+plot_excursions(step = 1)
 }
 \arguments{
 \item{step}{An integer with the model step to plot.}

@@ -4,7 +4,7 @@
 \alias{plot_balance_excursions}
 \title{Plot balance and excursions}
 \usage{
-plot_balance_excursions(step)
+plot_balance_excursions(step = 1)
 }
 \arguments{
 \item{step}{An integer with the model step to plot.}

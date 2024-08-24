@@ -4,7 +4,7 @@
 \alias{plot_returns}
 \title{Plot returns}
 \usage{
-plot_returns(step)
+plot_returns(step = 1)
 }
 \arguments{
 \item{step}{A integer with the model step to plot.}

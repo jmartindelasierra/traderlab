@@ -4,7 +4,7 @@
 \alias{print_returns}
 \title{Print returns}
 \usage{
-print_returns(step, pretty = TRUE)
+print_returns(step = 1, pretty = TRUE)
 }
 \arguments{
 \item{step}{A integer with the model step to print.}

@@ -4,7 +4,7 @@
 \alias{plot_balance}
 \title{Plot balance}
 \usage{
-plot_balance(step, show_source = FALSE)
+plot_balance(step = 1, show_source = FALSE)
 }
 \arguments{
 \item{step}{An integer with the model step to plot.}

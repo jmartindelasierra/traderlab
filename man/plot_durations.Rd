@@ -4,7 +4,7 @@
 \alias{plot_durations}
 \title{Plot durations}
 \usage{
-plot_durations(step)
+plot_durations(step = 1)
 }
 \arguments{
 \item{step}{A integer with the model step to plot.}

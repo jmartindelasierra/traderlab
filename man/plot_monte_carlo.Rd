@@ -5,7 +5,7 @@
 \title{Plot Monte Carlo simulations}
 \usage{
 plot_monte_carlo(
-  step,
+  step = 1,
   scope = "is",
   samples = 500,
   replace = TRUE,
