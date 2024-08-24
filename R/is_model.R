@@ -39,8 +39,8 @@ is_model <- function(model) {
   if(!all(!lapply(model$management, is.null) |> unlist()))
     stop("Missing values(s) in 'management': 'position', 'start_capital', 'interest_type', 'reinvest', 'leverage', 'fee_type' or 'fee'.", call. = FALSE)
 
-  if (!model$management$position %in% c("long", "short"))
-    stop("Invalid 'position' format. Must be either 'long' or 'short'.", call. = FALSE)
+  if (!model$management$position %in% c("long"))
+    stop("Invalid 'position' format. Must be 'long' ('short' is disabled for now).", call. = FALSE)
 
   if (!is.numeric(model$management$start_capital))
     stop("Invalid 'start_capital' format. Must be numeric.", call. = FALSE)
