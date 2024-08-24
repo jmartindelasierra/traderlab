@@ -10,7 +10,8 @@
 #'
 preview_best_metric_data <- function(ohlcv_data, step, metric, metric_value) {
 
-  close_time <- year <- balance <- balance_end <- balance_start <- roc <- NULL
+  # Initialization to avoid notes in R CMD check
+  close_time <- year <- balance <- balance_end <- balance_start <- returns <- NULL
 
   try({
 
@@ -36,13 +37,15 @@ preview_best_metric_data <- function(ohlcv_data, step, metric, metric_value) {
       ohlcv_data |>
       dplyr::mutate(year = format(close_time, "%Y")) |>
       dplyr::group_by(year) |>
-      dplyr::summarise(balance_start = dplyr::first(balance),
-                       balance_end = dplyr::last(balance)) |>
-      dplyr::mutate(roc = (balance_end - balance_start) / balance_start,
-                    color = ifelse(roc >= 0, "forestgreen", "indianred"))
+      dplyr::summarise(returns = sum(pct_return, na.rm = TRUE)) |>
+      # dplyr::summarise(balance_start = dplyr::first(balance),
+      #                  balance_end = dplyr::last(balance)) |>
+      dplyr::mutate(
+        # roc = (balance_end - balance_start) / balance_start,
+                    color = ifelse(returns >= 0, "forestgreen", "indianred"))
 
-    graphics::barplot(annual_returns$roc, names.arg = annual_returns$year, col = annual_returns$color, ylab = "Return", cex.names = 0.7, yaxt = "n")
-    graphics::axis(2, at = pretty(annual_returns$roc), lab = paste0(pretty(annual_returns$roc) * 100, "%"), las = TRUE, cex.axis = 0.7)
+    graphics::barplot(annual_returns$returns, names.arg = annual_returns$year, col = annual_returns$color, ylab = "Annual cum. return (%)", cex.names = 0.7, yaxt = "n")
+    graphics::axis(2, at = pretty(annual_returns$returns), lab = paste0(pretty(annual_returns$returns) * 100, "%"), las = TRUE, cex.axis = 0.7)
 
   }, silent = TRUE)
 
