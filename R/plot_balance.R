@@ -6,12 +6,12 @@
 #'
 #' @export
 #'
-plot_balance <- function(step, show_source = FALSE) {
+plot_balance <- function(step = 1, show_source = FALSE) {
 
   # Initialization to avoid notes in R CMD check
-  time <- balance0 <- drawdown <- pct_drawdown <- pct_drawdown <- NULL
+  balance0 <- drawdown <- pct_drawdown <- time <- NULL
 
-  if (missing(step) || is.null(step))
+  if (is.null(step))
     stop("'step' must be provided.", call. = FALSE)
   if (!is.numeric(step))
     stop("'step' must be integer.", call. = FALSE)
