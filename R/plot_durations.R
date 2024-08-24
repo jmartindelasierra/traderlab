@@ -5,12 +5,12 @@
 #'
 #' @export
 #'
-plot_durations <- function(step) {
+plot_durations <- function(step = 1) {
 
   # Initialization to avoid notes in R CMD check
   time <- exit <- bars_from_entry <- color <- year <- NULL
 
-  if (missing(step) || is.null(step))
+  if (is.null(step))
     stop("'step' must be provided.", call. = FALSE)
   if (!is.numeric(step))
     stop("'step' must be numeric.", call. = FALSE)
