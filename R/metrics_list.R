@@ -10,6 +10,8 @@ metrics_list <- function(ohlcv_data) {
   list(
     trades = number_of_trades(returns),
     pct_return = pct_return(ohlcv_data),
+    avg_pct_winner = avg_percent_winner(ohlcv_data),
+    avg_pct_loser = avg_percent_loser(ohlcv_data),
     cagr = CAGR(ohlcv_data),
     win_rate = win_probability(returns),
     profit_factor = profit_factor(returns),
@@ -22,6 +24,8 @@ metrics_list <- function(ohlcv_data) {
     max_consec_losses = max_consecutive_losses(returns),
     exp_a_ret = expected_annual_return(ohlcv_data),
     std_a_ret = std_annual_return(ohlcv_data),
+    annual_return = annualized_return(ohlcv_data),
+    annual_volatility = annualized_volatility(ohlcv_data),
     risk_adj_return = risk_adjusted_return(ohlcv_data),
     pct_dd = max_pct_drawdown(ohlcv_data),
     return_dd = return_drawdown_ratio(ohlcv_data),
