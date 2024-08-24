@@ -5,12 +5,12 @@
 #'
 #' @export
 #'
-plot_benchmark <- function(step) {
+plot_benchmark <- function(step = 1) {
 
   # Initialization to avoid notes in R CMD check
   time <- pct_balance0 <- pct_balance_bh <- above <- year <- balance_end <- balance_start <- balance_end_bh <- balance_start_bh <- roc_trading <- roc_bh <- pct_drawdown <- NULL
 
-  if (missing(step) || is.null(step))
+  if (is.null(step))
     stop("'step' must be provided.", call. = FALSE)
   if (!is.numeric(step))
     stop("'step' must be integer.", call. = FALSE)
@@ -79,22 +79,23 @@ plot_benchmark <- function(step) {
 
   returns_corr <- returns_corr$acf[which(returns_corr$lag == 0)]
 
-  # returns_detrended_corr <- NA
-  # returns_detrended_corr <-
-  #   try({
-  #     stats::ccf(ohlcv_data$pct_bh - dplyr::lag(ohlcv_data$pct_bh),
-  #                balance$pct_balance - dplyr::lag(balance$pct_balance),
-  #                plot = FALSE,
-  #                na.action = na.omit)
-  #   }, silent = TRUE)
-  #
-  # returns_detrended_corr <-
-  #   tryCatch({
-  #     returns_detrended_corr$acf[which(returns_detrended_corr$lag == 0)]
-  #   },
-  #   error = function(e) NA)
+  monthly_returns <-
+    balance |>
+    dplyr::mutate(year_month = format(time, "%Y-%m")) |>
+    dplyr::group_by(year_month) |>
+    dplyr::summarise(balance_start = dplyr::first(balance),
+                     balance_end = dplyr::last(balance),
+                     balance_start_bh = dplyr::first(close),
+                     balance_end_bh = dplyr::last(close)) |>
+    dplyr::mutate(roc_trading = (balance_end - balance_start) / balance_start,
+                  roc_bh = (balance_end_bh - balance_start_bh) / balance_start_bh)
 
-  annual_returns_corr <-
+  monthly_returns_corr <-
+    monthly_returns |>
+    dplyr::select(year_month, roc_trading, roc_bh) |>
+    with(cor(roc_trading, roc_bh))
+
+  annual_returns <-
     balance |>
     dplyr::mutate(year = format(time, "%Y")) |>
     dplyr::group_by(year) |>
@@ -103,7 +104,10 @@ plot_benchmark <- function(step) {
                      balance_start_bh = dplyr::first(close),
                      balance_end_bh = dplyr::last(close)) |>
     dplyr::mutate(roc_trading = (balance_end - balance_start) / balance_start,
-                  roc_bh = (balance_end_bh - balance_start_bh) / balance_start_bh) |>
+                  roc_bh = (balance_end_bh - balance_start_bh) / balance_start_bh)
+
+  annual_returns_corr <-
+    annual_returns |>
     dplyr::select(year, roc_trading, roc_bh) |>
     with(cor(roc_trading, roc_bh))
 
@@ -116,7 +120,7 @@ plot_benchmark <- function(step) {
     ggplot2::scale_y_continuous(labels = scales::percent) +
     ggplot2::scale_color_manual(values = c("Trading" = "steelblue", "Buy & Hold" = "orange2")) +
     ggplot2::theme_bw() +
-    ggplot2::labs(x = NULL, y = "Return (%)", color = "Model", caption = glue::glue("Above B&H: {round(pct_above * 100, 1)}%. Series correlation: {round(returns_corr, 2)}. Annual return correlation: {round(annual_returns_corr, 2)}"))
+    ggplot2::labs(x = NULL, y = "Return (%)", color = "Model", caption = glue::glue("Above B&H: {round(pct_above * 100, 1)}%. Monthly balance correlation: {round(monthly_returns_corr, 2)}. Annual balance correlation: {round(annual_returns_corr, 2)}"))
 
   # p2 <-
   #   merge(ohlcv_data |> dplyr::select(time = close_time, pct_bh),
@@ -141,6 +145,24 @@ plot_benchmark <- function(step) {
     ggplot2::scale_color_manual(values = c("Trading" = "steelblue", "Buy & Hold" = "orange2")) +
     ggplot2::theme_bw() +
     ggplot2::labs(x = NULL, y = "Drawdown (%)", color = "Model")
+
+  # balance |>
+  #   dplyr::mutate(year = format(time, "%Y")) |>
+  #   dplyr::group_by(year) |>
+  #   dplyr::summarise(balance_start = dplyr::first(balance),
+  #                    balance_end = dplyr::last(balance),
+  #                    balance_start_bh = dplyr::first(close),
+  #                    balance_end_bh = dplyr::last(close)) |>
+  #   dplyr::mutate(roc_trading = (balance_end - balance_start) / balance_start,
+  #                 roc_bh = (balance_end_bh - balance_start_bh) / balance_start_bh) |>
+  #   dplyr::select(year, roc_trading, roc_bh) |>
+  #   tidyr::pivot_longer(cols = c(roc_trading, roc_bh)) |>
+  #   ggplot2::ggplot() +
+  #   ggplot2::geom_col(ggplot2::aes(x = year, y = value, fill = name), position = "dodge") +
+  #   ggplot2::scale_y_continuous(labels = scales::percent) +
+  #   ggplot2::scale_fill_manual(values = c("roc_trading" = "steelblue", "roc_bh" = "orange2")) +
+  #   ggplot2::theme_bw() +
+  #   ggplot2::labs(x = NULL, y = "Annual return (%)")
 
   suppressWarnings({
     cowplot::plot_grid(p1, p3, nrow = 2, align = "v", rel_heights = c(3, 1))
