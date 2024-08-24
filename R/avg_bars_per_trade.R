@@ -5,10 +5,12 @@
 #'
 avg_bars_per_trade <- function(ohlcv_data) {
 
+  # Initialization to avoid notes in R CMD check
+  bars_from_entry <- exit <- NULL
+
   ohlcv_data |>
-    dplyr::filter(!is.na(bars_from_entry),
-                  bars_from_entry != 0) |>
+    dplyr::filter(exit) |>
     dplyr::pull(bars_from_entry) |>
-    mean()
+    mean(na.rm = TRUE)
 
 }
