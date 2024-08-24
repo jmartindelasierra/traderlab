@@ -6,11 +6,12 @@
 #'
 #' @export
 #'
-print_returns <- function(step, pretty = TRUE) {
+print_returns <- function(step = 1, pretty = TRUE) {
 
+  # Initialization to avoid notes in R CMD check
   time <- year <- month_name <- balance_end <- balance_start <- roc <- NULL
 
-  if (missing(step) || is.null(step))
+  if (is.null(step))
     stop("'step' must be provided.", call. = FALSE)
   if (!is.numeric(step))
     stop("'step' must be integer.", call. = FALSE)
@@ -61,14 +62,15 @@ print_returns <- function(step, pretty = TRUE) {
 
     t1 <-
       t1 |>
+      dplyr::mutate_if(is.numeric, ~na_if(., 0)) |>
       gt::gt() |>
+      gt::cols_label("year" = "") |>
       gt::fmt_percent() |>
-      gt::sub_missing(missing_text = " ") |>
+      gt::sub_missing(missing_text = "--") |>
+      gt::cols_align(align = "center") |>
       gt::data_color(
         columns = 2:13,
-        fn = scales::col_bin(bins = c(-Inf, 0, Inf), palette = c("firebrick", "forestgreen")),
-        #apply_to = "text",
-        na_color = "white"
+        fn = scales::col_bin(bins = c(-Inf, 0, Inf), palette = c("firebrick", "forestgreen"), na.color = "darkgray")
       ) |>
       gt::tab_header(title = "Returns")
 
