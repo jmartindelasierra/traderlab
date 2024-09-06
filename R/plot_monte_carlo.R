@@ -185,19 +185,19 @@ plot_monte_carlo <- function(step = 1, scope = "is", samples = 500, replace = TR
     profit_factor(x)
   }) |> unlist()
 
-  max_consec_losses_is <-
+  max_consec_losers_is <-
     metrics |>
     dplyr::filter(scope == "is") |>
-    dplyr::filter(variable == "max_consec_losses") |>
+    dplyr::filter(variable == "max_consec_losers") |>
     dplyr::pull(value)
 
-  max_consec_losses_oos <-
+  max_consec_losers_oos <-
     metrics |>
     dplyr::filter(scope == "oos") |>
-    dplyr::filter(variable == "max_consec_losses") |>
+    dplyr::filter(variable == "max_consec_losers") |>
     dplyr::pull(value)
 
-  max_consec_losses <- lapply(returns_smp, function(x) {
+  max_consec_losers <- lapply(returns_smp, function(x) {
     max_consecutive_losses(x)
   }) |> unlist()
 
@@ -285,7 +285,7 @@ plot_monte_carlo <- function(step = 1, scope = "is", samples = 500, replace = TR
     data.frame(cagr = cagrs,
                win_rate = win_rates,
                profit_factor = profit_factors,
-               max_consecutive_losses = max_consec_losses,
+               max_consecutive_losers = max_consec_losers,
                pct_drawdown = pct_drawdowns,
                return_dd = returns_dd,
                sharpe = sharpes,
@@ -323,12 +323,12 @@ plot_monte_carlo <- function(step = 1, scope = "is", samples = 500, replace = TR
 
   p4 <-
     ggplot2::ggplot() +
-    ggplot2::geom_histogram(data = metrics_smp, ggplot2::aes(x = max_consec_losses), bins = 30, fill = "steelblue", alpha = 0.5) +
-    ggplot2::geom_vline(xintercept = stats::median(metrics_smp$max_consecutive_losses), color = "steelblue3", linewidth = 1) +
-    ggplot2::geom_vline(xintercept = max_consec_losses_is, color = "black", linewidth = 1) +
-    ggplot2::geom_vline(xintercept = max_consec_losses_oos, color = "firebrick", linewidth = 1) +
+    ggplot2::geom_histogram(data = metrics_smp, ggplot2::aes(x = max_consec_losers), bins = 30, fill = "steelblue", alpha = 0.5) +
+    ggplot2::geom_vline(xintercept = stats::median(metrics_smp$max_consecutive_losers), color = "steelblue3", linewidth = 1) +
+    ggplot2::geom_vline(xintercept = max_consec_losers_is, color = "black", linewidth = 1) +
+    ggplot2::geom_vline(xintercept = max_consec_losers_oos, color = "firebrick", linewidth = 1) +
     ggplot2::theme_bw() +
-    ggplot2::labs(x = "Max. consec. losses", y = "Count")
+    ggplot2::labs(x = "Max. consec. losers", y = "Count")
 
   p5 <-
     ggplot2::ggplot() +
@@ -388,7 +388,7 @@ plot_monte_carlo <- function(step = 1, scope = "is", samples = 500, replace = TR
         cagr = cagr_is,
         win_rate = win_rate_is,
         profit_factor = profit_factor_is,
-        max_consec_losses = max_consec_losses_is,
+        max_consec_losers = max_consec_losers_is,
         pct_dd = pct_dd_is,
         return_dd = return_dd_is,
         sharpe_ratio = sharpe_is,
@@ -401,7 +401,7 @@ plot_monte_carlo <- function(step = 1, scope = "is", samples = 500, replace = TR
         cagr = cagr_oos,
         win_rate = win_rate_oos,
         profit_factor = profit_factor_oos,
-        max_consec_losses = max_consec_losses_oos,
+        max_consec_losers = max_consec_losers_oos,
         pct_dd = pct_dd_oos,
         return_dd = return_dd_oos,
         sharpe_ratio = sharpe_oos,
@@ -418,7 +418,7 @@ plot_monte_carlo <- function(step = 1, scope = "is", samples = 500, replace = TR
       data.frame(cagr = -stats::quantile(-cagrs, probs = c(0.5, 0.6, 0.7, 0.8, 0.9, 0.95), na.rm = TRUE),
                  win_rate = -stats::quantile(-win_rates, probs = c(0.5, 0.6, 0.7, 0.8, 0.9, 0.95), na.rm = TRUE),
                  profit_factor = -stats::quantile(-profit_factors, probs = c(0.5, 0.6, 0.7, 0.8, 0.9, 0.95), na.rm = TRUE),
-                 max_consec_losses = stats::quantile(max_consec_losses, probs = c(0.5, 0.6, 0.7, 0.8, 0.9, 0.95), na.rm = TRUE),
+                 max_consec_losers = stats::quantile(max_consec_losers, probs = c(0.5, 0.6, 0.7, 0.8, 0.9, 0.95), na.rm = TRUE),
                  pct_dd = -stats::quantile(-pct_drawdowns, probs = c(0.5, 0.6, 0.7, 0.8, 0.9, 0.95), na.rm = TRUE),
                  return_dd = -stats::quantile(-returns_dd, probs = c(0.5, 0.6, 0.7, 0.8, 0.9, 0.95), na.rm = TRUE),
                  sharpe_ratio = -stats::quantile(-sharpes, probs = c(0.5, 0.6, 0.7, 0.8, 0.9, 0.95), na.rm = TRUE),
