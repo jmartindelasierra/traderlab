@@ -52,7 +52,7 @@ plot_balance <- function(step = 1, show_source = FALSE) {
       ggplot2::geom_step(ggplot2::aes(x = time, y = balance0), linewidth = 0.25, color = "black") +
       ggplot2::geom_step(data = balance |> dplyr::mutate(close = close - dplyr::first(close)), ggplot2::aes(x = time, y = close/scale_coef), linewidth = 0.5, color = "orange3") +
       ggplot2::annotate("rect", xmin = oos_start, xmax = oos_end, ymin = -Inf, ymax = Inf, fill = "forestgreen", alpha = 0.2) +
-      ggplot2::scale_y_continuous(name = "Balance", labels = scales::dollar, sec.axis = ggplot2::sec_axis(~.*scale_coef, name = "Price", labels = scales::dollar)) +
+      ggplot2::scale_y_continuous(name = "Balance", labels = scales::dollar, sec.axis = ggplot2::sec_axis(~.*scale_coef, name = "Relative price", labels = scales::dollar)) +
       ggplot2::theme_bw() +
       ggplot2::theme(axis.title.y.right = ggplot2::element_text(color = "orange3"), axis.text.y.right = ggplot2::element_text(color = "orange3"), axis.line.y.right = ggplot2::element_line(color = "orange3"), axis.ticks.y.right = ggplot2::element_line(color = "orange3")) +
       ggplot2::labs(x = NULL, y = "Balance")
