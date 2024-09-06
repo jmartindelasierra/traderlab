@@ -8,7 +8,7 @@
 plot_benchmark <- function(step = 1) {
 
   # Initialization to avoid notes in R CMD check
-  time <- pct_balance0 <- pct_balance_bh <- above <- year <- balance_end <- balance_start <- balance_end_bh <- balance_start_bh <- roc_trading <- roc_bh <- pct_drawdown <- NULL
+  time <- pct_balance0 <- pct_balance_bh <- above <- year <- year_month <- balance_end <- balance_start <- balance_end_bh <- balance_start_bh <- roc_trading <- roc_bh <- pct_drawdown <- NULL
 
   if (is.null(step))
     stop("'step' must be provided.", call. = FALSE)
