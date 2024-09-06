@@ -50,7 +50,11 @@ monte_carlo <- function(step = NULL, scope, samples, replace, verbose) {
   balance <-
     balance |>
     dplyr::filter(exit == 1) |>
-    dplyr::mutate(time = as.POSIXct(time, origin = "1970-01-01"))
+    dplyr::mutate(time = as.POSIXct(time, origin = "1970-01-01"),
+                  # Recompute pct_return as the return in balance terms, not per trade return
+                  pct_return = (balance - dplyr::lag(balance)) / dplyr::lag(balance))
+
+  balance$pct_return[1] <- 0
 
   start_capital <- balance$balance[1] / (1 + balance$pct_return[1])
 
@@ -63,7 +67,10 @@ monte_carlo <- function(step = NULL, scope, samples, replace, verbose) {
 
   for (i in 1:samples) {
 
-    balance_tmp <- balance
+    # shift <- as.integer(runif(1, min = 1, max = nrow(balance)))
+    # balance$pct_return <- c(tail(balance$pct_return, -shift), head(balance$pct_return, shift))
+
+    balance_tmp <- balance # |> dplyr::filter(pct_return != 0)
 
     i_smp <- sample(1:nrow(balance_tmp), length(1:nrow(balance_tmp)), replace = {{replace}})
     pct_return_smp <- balance_tmp$pct_return[i_smp]
