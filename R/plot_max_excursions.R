@@ -2,11 +2,11 @@
 #' Plot maximum excursions
 #'
 #' @param step An integer with the model step to plot.
-#' @param show_cum_return A logical value. If TRUE, cumulative return line is shown.
+#' @param show_sum_return A logical value. If TRUE, cumulative return line is shown.
 #'
 #' @export
 #'
-plot_max_excursions <- function(step = 1, show_cum_return = FALSE) {
+plot_max_excursions <- function(step = 1, show_sum_return = FALSE) {
 
   # Initialization to avoid notes in R CMD check
   trade_index <- pct_balance0 <- pct_exc <- ret <- mfe <- mae <- cum_return <- NULL
@@ -62,10 +62,11 @@ plot_max_excursions <- function(step = 1, show_cum_return = FALSE) {
     balance |>
     dplyr::group_by(trade_index) |>
     dplyr::summarise(ret = dplyr::last(pct_return),
-                     pct_balance = dplyr::last(pct_balance0),
+                     # pct_balance = dplyr::last(pct_balance0),
                      mae = min(pct_exc),
                      mfe = max(pct_exc)) |>
     dplyr::mutate(cum_return = cumsum(ret)) |>
+    # dplyr::mutate(cum_return = cumprod(ret + 1) - 1) |>
     tidyr::drop_na() |>
     ggplot2::ggplot(ggplot2::aes(x = trade_index)) +
     ggplot2::geom_col(ggplot2::aes(y = mfe, fill = "Pos. return/MFE"), alpha = 0.4) +
@@ -79,13 +80,13 @@ plot_max_excursions <- function(step = 1, show_cum_return = FALSE) {
     ggplot2::theme(legend.position = "bottom") +
     ggplot2::labs(x = "Trades", y = "Returns / MFE / MAE (%)")
 
-  if (show_cum_return) {
+  if (show_sum_return) {
 
     p <-
       p +
       ggplot2::geom_line(ggplot2::aes(y = cum_return, color = "black"), linewidth = 0.7) +
-      ggplot2::scale_color_identity(guide = "legend", name = NULL, labels = c("Cum. return")) +
-      ggplot2::labs(x = "Trades", y = "Returns / MFE / MAE / Cum. return (%)")
+      ggplot2::scale_color_identity(guide = "legend", name = NULL, labels = c("Sum return")) +
+      ggplot2::labs(x = "Trades", y = "Returns / MFE / MAE / Sum return (%)")
 
   }
 
