@@ -43,14 +43,17 @@ print_returns <- function(step = 1, pretty = TRUE) {
 
   t1 <-
     balance |>
+    dplyr::filter(!is.na(pct_return)) |>
     dplyr::mutate(time = as.POSIXct(time, origin = "1970-01-01"),
                   year = format(time, "%Y"),
                   month = format(time, "%m"),
                   month_name = format(time, "%b")) |>
     dplyr::group_by(year, month, month_name) |>
+    # Balance % change != cumulative return
     dplyr::summarise(balance_start = dplyr::first(balance),
                      balance_end = dplyr::last(balance)) |>
     dplyr::mutate(roc = (balance_end - balance_start) / balance_start) |>
+    # dplyr::summarise(returns = tail(cumprod(pct_return + 1) - 1, 1)) |>
     dplyr::ungroup() |>
     dplyr::select(month, month_name, year, roc) |>
     dplyr::arrange(month) |>
@@ -62,7 +65,7 @@ print_returns <- function(step = 1, pretty = TRUE) {
 
     t1 <-
       t1 |>
-      dplyr::mutate_if(is.numeric, ~na_if(., 0)) |>
+      dplyr::mutate_if(is.numeric, ~dplyr::na_if(., 0)) |>
       gt::gt() |>
       gt::cols_label("year" = "") |>
       gt::fmt_percent() |>
@@ -72,7 +75,7 @@ print_returns <- function(step = 1, pretty = TRUE) {
         columns = 2:13,
         fn = scales::col_bin(bins = c(-Inf, 0, Inf), palette = c("firebrick", "forestgreen"), na.color = "darkgray")
       ) |>
-      gt::tab_header(title = "Returns")
+      gt::tab_header(title = "Monthly balance ROC")
 
   }
 
