@@ -43,10 +43,10 @@ compute_balance <- function(ohlcv_data, model) {
   #
   ohlcv_data <-
     ohlcv_data |>
-    dplyr::mutate(balance0 = balance - model$management$start_capital,
-                  pct_balance0 = balance0 / model$management$start_capital,
+    dplyr::mutate(balance0 = balance - model$management$start_capital, # balance from 0
+                  pct_balance0 = balance0 / model$management$start_capital, # cumulative % return; pct_balance0 diffs = pct_return
                   ret = balance - dplyr::lag(balance),
-                  pct_balance_return = ret / dplyr::lag(balance)) # return % referenced to total capital
+                  pct_balance_return = ret / dplyr::lag(balance)) # balance % change
 
   ohlcv_data$pct_balance_return[1] <- 0
 
@@ -78,23 +78,27 @@ compute_balance <- function(ohlcv_data, model) {
 
   ohlcv_data$trade_index <- trade_index
 
-  pct_exc_balance0 <-
-    ohlcv_data |>
-    dplyr::filter(trade_index > 0) |>
-    dplyr::group_by(trade_index) |>
-    dplyr::mutate(t = 1:dplyr::n(),
-                  first_close = dplyr::first(close),
-                  pct_exc = model$management$leverage * (((close - first_close) / first_close) - model$management$fee),
-                  first_pct_balance0 = dplyr::first(pct_balance0),
-                  pct_exc_balance0 = ifelse(t == max(t), pct_balance0, pct_exc + first_pct_balance0)) |>
-    dplyr::ungroup() |>
-    dplyr::select(close_time, pct_exc, pct_exc_balance0)
+  if (sum(is.na(ohlcv_data$trade_index)) < nrow(ohlcv_data)) {
 
-  ohlcv_data <-
-    merge(ohlcv_data, # |> dplyr::select(-trade_index),
-          pct_exc_balance0,
-          by = "close_time",
-          all = TRUE)
+    pct_exc_balance0 <-
+      ohlcv_data |>
+      dplyr::filter(trade_index > 0) |>
+      dplyr::group_by(trade_index) |>
+      dplyr::mutate(t = 1:dplyr::n(),
+                    first_close = dplyr::first(close),
+                    pct_exc = model$management$leverage * (((close - first_close) / first_close) - model$management$fee), # % price excursion from entry
+                    first_pct_balance0 = dplyr::first(pct_balance0),
+                    pct_exc_balance0 = ifelse(t == max(t), pct_balance0, pct_exc + first_pct_balance0)) |> # % price excursion from cumulative return
+      dplyr::ungroup() |>
+      dplyr::select(close_time, pct_exc, pct_exc_balance0)
+
+    ohlcv_data <-
+      merge(ohlcv_data, # |> dplyr::select(-trade_index),
+            pct_exc_balance0,
+            by = "close_time",
+            all = TRUE)
+
+  }
 
   ohlcv_data <-
     ohlcv_data |>
