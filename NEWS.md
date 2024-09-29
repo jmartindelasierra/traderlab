@@ -1,3 +1,24 @@
+# traderlab (0.0.0.9002)
+
+* New metrics:
+  - Trades per month
+  - Average % return
+  - Annualized return (similar to CAGR)
+  - Annualized volatility
+* New plot:
+  - plot_max_excursions()
+* New table:
+  - print_metrics()
+* Updates:
+  - print_returns()
+  - plot_max_excursions()
+  - List of metrics to compute
+  - daily_value indicator (accepting lagging days as parameter)
+* Fixes:
+  - Week to minutes conversion
+  - avg_bars metric calculation
+* Other updates and fixes
+
 # traderlab (0.0.0.9001)
 
 * Two new indicators:

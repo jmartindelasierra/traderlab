@@ -1,6 +1,6 @@
 Package: traderlab
 Title: Fast trading systems design
-Version: 0.0.0.9001
+Version: 0.0.0.9002
 Authors@R: 
     person("Jesús", "Martín de la Sierra", , "jesus.martinsierra@gmail.com", role = c("aut", "cre"))
 Description: This package allows a fast design, backtesting and analysis of trading strategies.
@@ -9,6 +9,7 @@ Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.2.3
 Imports: 
+    corrplot,
     cowplot,
     DBI,
     dplyr,
@@ -23,6 +24,7 @@ Imports:
     lubridate,
     pbapply,
     pracma,
+    purrr,
     quantmod,
     RSQLite,
     scales,
