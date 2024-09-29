@@ -2,7 +2,7 @@
 #' Plot maximum excursions
 #'
 #' @param step An integer with the model step to plot.
-#' @param show_sum_return A logical value. If TRUE, cumulative return line is shown.
+#' @param show_sum_return A logical value. If TRUE, sum of returns line is shown.
 #'
 #' @export
 #'

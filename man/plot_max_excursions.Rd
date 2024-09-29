@@ -4,12 +4,12 @@
 \alias{plot_max_excursions}
 \title{Plot maximum excursions}
 \usage{
-plot_max_excursions(step = 1, show_cum_return = FALSE)
+plot_max_excursions(step = 1, show_sum_return = FALSE)
 }
 \arguments{
 \item{step}{An integer with the model step to plot.}
 
-\item{show_cum_return}{A logical value. If TRUE, cumulative return line is shown.}
+\item{show_sum_return}{A logical value. If TRUE, sum of returns line is shown.}
 }
 \description{
 Plot maximum excursions
