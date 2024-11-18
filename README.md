@@ -7,7 +7,7 @@
 
 [![Lifecycle:
 experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html#experimental)
-[![](https://img.shields.io/badge/devel%20version-0.0.0.9001-blue.svg)](https://github.com/jmartindelasierra/traderlab)
+[![](https://img.shields.io/badge/devel%20version-0.0.0.9002-blue.svg)](https://github.com/jmartindelasierra/traderlab)
 <a href="https://www.buymeacoffee.com/jmartindelasierra" target="_blank"><img src="https://img.shields.io/badge/-buy_me_a%C2%A0coffee-gray?logo=buy-me-a-coffee" alt="Buy Me A Coffee"></a>
 <!-- badges: end -->
 
@@ -521,7 +521,7 @@ We also have the choice of getting a dataframe of this pre-process with
 the help of our `set_indicators()` function:
 
 ``` r
-s1 <- set_indicators("./models/basic_ema_xover.yml", step = 1)
+si <- set_indicators("./models/basic_ema_xover.yml", step = 1)
 ```
 
 `set_indicators()` returns the OHLCV data from the model decorated with
@@ -531,7 +531,7 @@ analysis of our trading idea and for plotting other features in the
 dataset:
 
 ``` r
-ggplot(s1 |> dplyr::filter(open_time >= "2024-01-01",
+ggplot(si |> dplyr::filter(open_time >= "2024-01-01",
                            close_time <= "2024-03-31"),
        aes(x = close_time)) +
   geom_line(aes(y = volume)) +
@@ -596,20 +596,20 @@ balances() |>
 
 The output shows information about the total time covered by the dataset
 and the time per scope. In the example, the total duration of the
-dataset is about 6 years and 3 months. The in-sample period has a
-duration of 5 years and represents almost an 80% of the data. The
-out-of-sample period has a duration of 1 year and 3 months, and
-represents a 20% of the data:
+dataset is about 6 years and 10 months. The in-sample period has a
+duration of 5 years and represents the 73% of the data. The
+out-of-sample period has a duration of 1 year and 10 months, and
+represents the 27% of the data:
 
 ``` r
 $total_time
-                start                 end            duration
-1 2018-01-01 04:59:59 2024-04-01 01:59:59 6y 3m -1d 21H 0M 0S
+                start                 end             duration
+1 2018-01-01 04:59:59 2024-11-01 00:59:59 6y 10m -1d 20H 0M 0S
 
 $scope_time
-  scope               start                 end            duration  bars         p
-1    is 2018-01-01 04:59:59 2023-01-01 00:59:59 5y 0m -1d 20H 0M 0S 10940 0.7999415
-2   oos 2023-01-01 04:59:59 2024-04-01 01:59:59 1y 3m -1d 21H 0M 0S  2736 0.2000585
+  scope               start                 end             duration  bars         p
+1    is 2018-01-01 04:59:59 2023-01-01 00:59:59  5y 0m -1d 20H 0M 0S 10940 0.7312834
+2   oos 2023-01-01 04:59:59 2024-11-01 00:59:59 1y 10m -1d 20H 0M 0S  4020 0.2687166
 ```
 
 The next commands shows information about the signals. The `signals()`
@@ -623,33 +623,33 @@ balances() |>
   signals(run$step)
 ```
 
-Specifically, this step has 61 total entries and 60 exits (the last
+Specifically, this step has 69 total entries and 68 exits (the last
 trade is not closed in the chosen period). We also obtain the number of
-entries/exits per scope, as well as its proportion (82% for in-sample,
-18% for out-of-sample). Other information such exposure (52% in this
-example) and average trade duration (2.7 weeks) are available:
+entries/exits per scope, as well as its proportion (72% for in-sample,
+28% for out-of-sample). Other information such exposure (52% in this
+example) and average trade duration (2.65 weeks) are available:
 
 ``` r
 $total_entries
-[1] 61
+[1] 69
 
 $total_exits
-[1] 60
+[1] 68
 
 $scope
   scope entries exits p_entries   p_exits
-1    is      49    49 0.8032787 0.8166667
-2   oos      12    11 0.1967213 0.1833333
+1    is      49    49 0.7101449 0.7205882
+2   oos      20    19 0.2898551 0.2794118
 
 $exposure
    bars trading p_trading
-1 13676    7209 0.5271278
+1 14960    7846 0.5244652
 
 $avg_bars
-[1] 114.9893
+[1] 111.2565
 
 $avg_duration
-[1] "1655845.43828265s (~2.74 weeks)"
+[1] "1602092.90322581s (~2.65 weeks)"
 ```
 
 If we move to a more performance related results, the most immediate
@@ -664,29 +664,35 @@ $variables
 2 ema2_periods    95
 
 $metrics
-              metric           is           oos         full
-1             trades  49.00000000   11.00000000  60.00000000
-2         pct_return   3.02195212    1.18380896   4.20576108
-3               cagr   0.32098662    0.86968194   0.30217963
-4           win_rate   0.28571429    0.45454545   0.31666667
-5      profit_factor   2.74150157    5.81593220   3.12297708
-6           wl_ratio   0.40000000    0.83333333   0.46341463
-7           rr_ratio   3.53155523    2.87923985   3.36847639
-8           avg_bars 109.02040816  150.50000000 117.18032787
-9           exposure   0.49277879    0.66447368   0.52712782
-10        expectancy 616.72492249 1076.18996173 700.96017968
-11   max_consec_wins   3.00000000    2.00000000   3.00000000
-12 max_consec_losses   7.00000000    3.00000000   7.00000000
-13   risk_adj_return   6.13247193    1.78157388   7.97863622
-14            pct_dd  -0.42532318   -0.09689864  -0.42532318
-15         return_dd   7.02247107    9.48943890   9.77342933
-16           cagr_dd   0.75468876    8.97517206   0.71047063
-17      sharpe_ratio   0.57773545    1.07703944   0.52590032
-18         r_squared   0.85038789    0.30889049   0.86246072
-19           k_ratio   0.33771018    0.21260849   0.32100899
-20               sqn   1.41034537    1.70042654   1.82885513
-21               var  -0.09991205   -0.07203091  -0.07103929
-22              cvar  -0.11305337   -0.07327635  -0.10748702
+                  metric           is          oos         full
+1                 trades  49.00000000  19.00000000  68.00000000
+2         monthly_trades   0.81673985   0.86384747   0.82932267
+3             pct_return   3.02195212   0.23015123   3.94760935
+4         avg_pct_return   0.06964976   0.04871880   0.06380140
+5         avg_pct_winner   0.37635671   0.21289373   0.32186905
+6          avg_pct_loser  -0.05303302  -0.04704990  -0.05150542
+7               win_rate   0.28571429   0.36842105   0.30882353
+8   winners_losers_ratio   0.40000000   0.58333333   0.44680851
+9               avg_bars 109.02040816 122.52631579 112.79411765
+10              exposure   0.49277879   0.61069652   0.52446524
+11            expectancy 616.72492249 487.18801481 580.53078652
+12         profit_factor   2.74150157   2.63949541   2.71645975
+13    max_consec_winners   3.00000000   2.00000000   3.00000000
+14     max_consec_losers   7.00000000   3.00000000   7.00000000
+15     reward_risk_ratio   3.53155523   2.14893726   3.09163133
+16 return_exposure_ratio   6.13247193   0.37686678   7.52692274
+17                  cagr   0.32098662   0.11964531   0.26364654
+18         annual_return   0.32095304   0.11961388   0.26362683
+19     annual_volatility   0.75166502   0.13103208   0.64639444
+20                pct_dd  -0.42532318  -0.09665300  -0.42532318
+21             return_dd   7.02247107   2.15106026   9.17353132
+22               cagr_dd   0.75468876   1.23788517   0.61987343
+23          sharpe_ratio   0.57773545   0.72563484   0.51021844
+24             r_squared   0.85038789   0.65671016   0.88255150
+25               k_ratio   0.33771018   0.31329641   0.33029779
+26                   sqn   1.41034537   1.25302417   1.72405303
+27                   var  -0.09991205  -0.02361677  -0.05851872
+28                  cvar  -0.11305337  -0.02679445  -0.10368965
 ```
 
 There are other functions that allow exploring the balances, variables
@@ -708,7 +714,7 @@ metrics() |>
     sort_metrics(-sharpe_ratio) |>
     filter_step(6) |>
     compare_scopes() |>
-    print(n = 25)
+    print(n = 30)
 ```
 
 If this resulted in better metrics for us, we could get the variable
@@ -1518,6 +1524,16 @@ indicators:
 -   Output: (final balance - initial balance) / initial balance
 -   Range: \[0, 1\]
 
+### Average winner %
+
+-   Name: avg_pct_winner
+-   Output: mean(positive return %)
+
+### Average loser %
+
+-   Name: avg_pct_loser
+-   Output: mean(negative return %)
+
 ### Compound Annual Growth Rate (CAGR)
 
 -   Name: cagr
@@ -1582,6 +1598,16 @@ Stop loss is required to compute this metric.
 
 -   Name: std_a\_ret
 -   Output: sd(annual returns)
+
+### Annualized return
+
+-   Name: annual_return
+-   Output: (total percent return + 1) ^ (12/months) - 1
+
+### Annualized volatility
+
+-   Name: annual_volatility
+-   Output: sd(monthly percent return) \* sqrt(12)
 
 ### Risk-adjusted return
 
