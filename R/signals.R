@@ -54,7 +54,7 @@ signals <- function(data, step) {
     dplyr::mutate(p_trading = trading / bars) |>
     data.frame()
 
-  avg_bars <- avg_bars_per_trade(data)
+  avg_bars <- avg_bars_per_trade(data |> dplyr::mutate(exit = ifelse(exit == 1, TRUE, FALSE)))
 
   avg_duration <-
     lubridate::interval(data$time[1], data$time[2]) |>
