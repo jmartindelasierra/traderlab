@@ -27,8 +27,13 @@ daily_value <- function(ohlcv_data, source, lag = 0) {
   date_indexes <-
     daily_values |>
     dplyr::pull(date_idx) |>
-    unique() |>
-    utils::head(-lag)
+    unique()
+
+  if (lag > 0) {
+    date_indexes <-
+      date_indexes |>
+      utils::head(-lag)
+  }
 
   values <-
     daily_values |>
