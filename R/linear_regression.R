@@ -22,6 +22,12 @@ linear_regression <- function(ohlcv_data, source, periods) {
           stats::predict(interval = "confidence") |>
           utils::tail(1)
 
+        # Prevent lwr and upr from NA
+        if (is.na(estimates[2])) {
+          estimates[2] <- estimates[1]
+          estimates[3] <- estimates[1]
+        }
+
         slope <-
           stats::coef(model)[2]
 
