@@ -8,11 +8,11 @@
 save_balance <- function(ohlcv_data, step, run_id) {
 
   # Initialization to avoid notes in R CMD check
-  close_time <- close <- scope <- entry <- exit <- trade <- bars_from_entry <- balance0 <- pct_balance0 <- drawdown <- pct_drawdown <- fees <- time <- trade_index <- pct_exc <- pct_exc_balance0 <- NULL
+  close_time <- close <- scope <- entry <- exit <- trade <- bars_from_entry <- balance0 <- pct_balance0 <- drawdown <- pct_drawdown <- fees <- time <- trade_index <- pct_exc <- pct_exc_balance0 <- margin_call_price <- NULL
 
   balance <-
     ohlcv_data |>
-    dplyr::select(time = close_time, close, scope, entry, exit, trade, trade_index, bars_from_entry, pct_return, balance, balance0, pct_balance0, drawdown, pct_drawdown, pct_exc, pct_exc_balance0, fees) |>
+    dplyr::select(time = close_time, close, scope, entry, exit, trade, trade_index, bars_from_entry, margin_call_price, pct_return, balance, balance0, pct_balance0, drawdown, pct_drawdown, pct_exc, pct_exc_balance0, fees) |>
     dplyr::mutate(run_id = run_id,
                   step = step) |>
     dplyr::relocate(run_id, .before = time) |>
