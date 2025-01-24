@@ -39,6 +39,8 @@ print_metrics <- function(step = 1) {
                          "avg_pct_return",
                          "avg_pct_winner",
                          "avg_pct_loser",
+                         "avg_bal_pct_winner",
+                         "avg_bal_pct_loser",
                          "win_rate",
                          "winners_losers_ratio",
                          "avg_bars",
@@ -67,6 +69,8 @@ print_metrics <- function(step = 1) {
     gt::text_replace(pattern = "avg_pct_return", replacement = "Avg. % return") |>
     gt::text_replace(pattern = "avg_pct_winner", replacement = "Avg. % winner") |>
     gt::text_replace(pattern = "avg_pct_loser", replacement = "Avg. % loser") |>
+    gt::text_replace(pattern = "avg_bal_pct_winner", replacement = "Avg. bal. % winner") |>
+    gt::text_replace(pattern = "avg_bal_pct_loser", replacement = "Avg. bal. % loser") |>
     gt::text_replace(pattern = "win_rate", replacement = "% winners") |>
     gt::text_replace(pattern = "winners_losers_ratio", replacement = "# winners / # losers") |>
     gt::text_replace(pattern = "avg_bars", replacement = "Avg. bars") |>
@@ -87,7 +91,7 @@ print_metrics <- function(step = 1) {
     gt::text_replace(pattern = "sqn", replacement = "SQN") |>
     gt::text_replace(pattern = "^var", replacement = "Monthly 5%-VaR") |>
     # gt::text_replace(pattern = "cvar", replacement = "Monthly 5%-CVaR") |>
-    gt::fmt_percent(rows = metric %in% c("pct_return", "avg_pct_return", "avg_pct_winner", "avg_pct_loser", "win_rate", "cagr", "exposure", "annual_return", "annual_volatility", "pct_dd", "var", "cvar")) |>
+    gt::fmt_percent(rows = metric %in% c("pct_return", "avg_pct_return", "avg_pct_winner", "avg_pct_loser", "avg_bal_pct_winner", "avg_bal_pct_loser", "win_rate", "cagr", "exposure", "annual_return", "annual_volatility", "pct_dd", "var", "cvar")) |>
     gt::fmt_integer(rows = metric %in% c("trades", "max_consec_winners", "max_consec_losers")) |>
     gt::fmt_number(rows = metric %in% c("monthly_trades", "profit_factor", "winners_losers_ratio", "reward_risk_ratio", "avg_bars", "return_dd", "cagr_dd", "sharpe_ratio", "r_squared", "k_ratio", "sqn")) |>
     gt::fmt_currency(rows = metric %in% c("expectancy")) |>

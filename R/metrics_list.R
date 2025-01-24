@@ -14,6 +14,8 @@ metrics_list <- function(ohlcv_data) {
     avg_pct_return = avg_percent_return(ohlcv_data),
     avg_pct_winner = avg_percent_winner(ohlcv_data),
     avg_pct_loser = avg_percent_loser(ohlcv_data),
+    avg_bal_pct_winner = avg_balance_percent_winner(ohlcv_data),
+    avg_bal_pct_loser = avg_balance_percent_loser(ohlcv_data),
     win_rate = win_probability(returns),
     winners_losers_ratio = win_loss_ratio(returns),
     avg_bars = avg_bars_per_trade(ohlcv_data),
