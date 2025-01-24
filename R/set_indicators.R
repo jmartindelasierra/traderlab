@@ -10,7 +10,7 @@
 set_indicators <- function(model_file, add_signals = FALSE, step = 1) {
 
   # Initialization to avoid notes in R CMD check
-  stop_loss_price <- entry_price <- NULL
+  stop_loss_price <- entry_price <- margin_call_price <- exit <- NULL
 
   if (missing(model_file) || is.null(model_file))
     stop("'model_file' must be provided.", call. = FALSE)
@@ -52,6 +52,12 @@ set_indicators <- function(model_file, add_signals = FALSE, step = 1) {
 
     ohlcv_data <- add_signals(ohlcv_data, model_step)
     ohlcv_data <- add_sl_price(ohlcv_data, model_step)
+    ohlcv_data <- add_margin_call_price(ohlcv_data, model_step)
+
+    ohlcv_data <-
+      ohlcv_data |>
+      dplyr::relocate(margin_call_price, .before = exit)
+
     ohlcv_data$bars_from_entry <- NULL
 
     if (!is.null(ohlcv_data$stop_loss_price)) {
