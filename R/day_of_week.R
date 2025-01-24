@@ -6,7 +6,7 @@
 #'
 day_of_week <- function(ohlcv_data, source) {
 
-  format(ohlcv_data[[source]], "%w") |>
+  format(ohlcv_data[[source]], "%u") |>
     as.integer()
 
 }
