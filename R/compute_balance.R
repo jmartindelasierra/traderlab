@@ -31,8 +31,15 @@ compute_balance <- function(ohlcv_data, model) {
     } else {
 
       flow <- capital_flow(position, start_capital, balance, interest_type, reinvest, ohlcv_data$entry_price[i], ohlcv_data$entry_price[i] + ohlcv_data$dif_entry_exit[i], leverage, fee_type, fee)
-      balance <- flow$end
-      ohlcv_data$pct_return[i] <- flow$pct_return
+
+      # Margin call control
+      if (ohlcv_data$low[i] <= ohlcv_data$margin_call_price[i]) {
+        balance <- 0
+      } else {
+        balance <- flow$end
+      }
+
+      ohlcv_data$pct_return[i] <- flow$pct_return # % return per trade
       ohlcv_data$balance[i] <- balance
       ohlcv_data$fees[i] <- flow$fees
 
@@ -59,7 +66,7 @@ compute_balance <- function(ohlcv_data, model) {
 
   for (i in 1:nrow(ohlcv_data)) {
 
-    if (ohlcv_data$entry[i] == 1) {
+    if (ohlcv_data$entry[i]) {
       trade_counter <- trade_counter + 1
       trade_in_progress <- TRUE
     }
