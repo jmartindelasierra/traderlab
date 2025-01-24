@@ -124,6 +124,7 @@ run_model <- function(model_file,
     data <- add_indicators(data, model_step)
     data <- add_signals(data, model_step)
     data <- add_sl_price(data, model_step)
+    data <- add_margin_call_price(data, model_step)
     # data <- add_breakeven(data, model_step)
     data <- get_pct_entry_exit(data)
 
