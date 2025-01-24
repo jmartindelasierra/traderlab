@@ -7,7 +7,7 @@
 
 [![Lifecycle:
 experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html#experimental)
-[![](https://img.shields.io/badge/devel%20version-0.0.0.9002-blue.svg)](https://github.com/jmartindelasierra/traderlab)
+[![](https://img.shields.io/badge/devel%20version-0.0.0.9003-blue.svg)](https://github.com/jmartindelasierra/traderlab)
 <a href="https://www.buymeacoffee.com/jmartindelasierra" target="_blank"><img src="https://img.shields.io/badge/-buy_me_a%C2%A0coffee-gray?logo=buy-me-a-coffee" alt="Buy Me A Coffee"></a>
 <!-- badges: end -->
 
@@ -1002,7 +1002,8 @@ indicators:
 
 -   Parameter:
     -   **source**: open, high or low
--   Output: current day open, high or low
+    -   **lag**
+-   Output: day open, high or low
 
 Example:
 
@@ -1011,6 +1012,7 @@ indicators:
   daily_high:
     indicator: daily_value
     source: high
+    lag: 1
 ```
 
 <img src="man/figures/README-daily_value.png"/>
@@ -1171,7 +1173,7 @@ indicators:
 
 -   Parameters:
     -   **periods**
-    -   **atr_periods**
+    -   **atr_mult**
 -   Outputs:
     -   **upr**
     -   **avg**
@@ -1184,7 +1186,7 @@ indicators:
   klt:
     indicator: Keltner
     periods: 20
-    atr_periods: 2
+    atr_mult: 2
 ```
 
 <img src="man/figures/README-Keltner.png"/>
@@ -1518,26 +1520,41 @@ indicators:
 -   Name: trades
 -   Output: number of closed trades
 
+### Number of trades per month
+
+-   Name: monthly_trades
+-   Output: average number of trades a month
+
 ### Return %
 
 -   Name: pct_return
 -   Output: (final balance - initial balance) / initial balance
 -   Range: \[0, 1\]
 
+### Average trade %
+
+-   Name: avg_pct_return
+-   Output: mean(trade return %)
+
 ### Average winner %
 
 -   Name: avg_pct_winner
--   Output: mean(positive return %)
+-   Output: mean(positive trade return %)
 
 ### Average loser %
 
 -   Name: avg_pct_loser
--   Output: mean(negative return %)
+-   Output: mean(negative trade return %)
 
-### Compound Annual Growth Rate (CAGR)
+### Average balance winner %
 
--   Name: cagr
--   Output: (final balance / initial balance)^(1 / years) - 1
+-   Name: avg_bal_pct_winner
+-   Output: mean(positive return % referenced to balance)
+
+### Average balance loser %
+
+-   Name: avg_bal_pct_loser
+-   Output: mean(negative return % referenced to balance)
 
 ### Win rate
 
@@ -1545,23 +1562,10 @@ indicators:
 -   Output: winning trades / total trades
 -   Range: \[0, 1\]
 
-### Profit factor
-
--   Name: profit_factor
--   Output: sum(positive returns) / \|sum(negative returns)\|
-
 ### Wins-to-Losses ratio
 
--   Name: wl_ratio
+-   Name: winners_losers_ratio
 -   Output: number of positive returns / number of negative returns
-
-### Risk-to-Reward ratio
-
--   Name: rr_ratio
--   Output: mean(r_multiples), where r_multiples = (target price - entry
-    price) / (entry price - stop loss price)
-
-Stop loss is required to compute this metric.
 
 ### Average bars
 
@@ -1579,6 +1583,11 @@ Stop loss is required to compute this metric.
 -   Output: win % \* mean(positive returns) - loss % \* \|mean(negative
     returns)\|
 
+### Profit factor
+
+-   Name: profit_factor
+-   Output: sum(positive returns) / \|sum(negative returns)\|
+
 ### Maximum consecutive wins
 
 -   Name: max_consec_wins
@@ -1589,15 +1598,20 @@ Stop loss is required to compute this metric.
 -   Name: max_consec_losses
 -   Output: number of consecutive trades with negative return
 
-### Expected annual return
+### Risk-to-Reward ratio
 
--   Name: exp_a\_ret
--   Output: mean(annual returns)
+-   Name: reward_risk_ratio
+-   Output: mean(avg_pct_winner) / abs(mean(avg_pct_loser))
 
-### Standard deviation of annual returns
+### Risk-adjusted return
 
--   Name: std_a\_ret
--   Output: sd(annual returns)
+-   Name: return_exposure_ratio
+-   Output: total % return / exposure
+
+### Compound Annual Growth Rate (CAGR)
+
+-   Name: cagr
+-   Output: (final balance / initial balance)^(1 / years) - 1
 
 ### Annualized return
 
@@ -1608,11 +1622,6 @@ Stop loss is required to compute this metric.
 
 -   Name: annual_volatility
 -   Output: sd(monthly percent return) \* sqrt(12)
-
-### Risk-adjusted return
-
--   Name: risk_adj_return
--   Output: total % return / exposure
 
 ### Maximum drawdown %
 

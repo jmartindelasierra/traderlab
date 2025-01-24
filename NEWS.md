@@ -1,3 +1,19 @@
+# traderlab (0.0.0.9003)
+
+* Additions:
+  - Interactive plots: iplot_balance(), iplot_balance_excursions(), iplot_portfolio_balance()
+  - Portfolio analysis: run_porfolio()
+  - New metrics: monthly_trades, avg_pct_return, avg_bal_pct_winner, avg_bal_pct_loser
+  - Added margin call price
+* Updates:
+  - Risk/reward metric now calculated as avg. winner/avg. loser
+  - Document lag parameter in daily_value indicator
+  - Change of day of week numeration in day_of_week indicator (Monday is 1)
+* Fixes:
+  - Average bars metric calculation
+  - ATR multiplier parameter in Keltner indicator changed from atr_period to atr_mult
+  - daily_value indicator with lag = 0 is now valid
+
 # traderlab (0.0.0.9002)
 
 * New metrics:
