@@ -103,8 +103,10 @@ get_binance_ohlcv_data <- function(symbol, timeframe) {
   names(ohlcv) <- c("open_time", "open", "high", "low", "close", "volume", "close_time")
 
   # Formatting
-  ohlcv$open_time <- as.POSIXct(ohlcv$open_time / 1000, origin = "1970-01-01", tz = "UTC")
-  ohlcv$close_time <- as.POSIXct(ohlcv$close_time / 1000, origin = "1970-01-01", tz = "UTC")
+  n_digits <- function(x) { floor(log10(x)) + 1 }
+  divider <- function(x) { 10^(n_digits(x) - 10) }
+  ohlcv$open_time <- as.POSIXct(ohlcv$open_time / divider(ohlcv$open_time), origin = "1970-01-01", tz = "UTC")
+  ohlcv$close_time <- as.POSIXct(ohlcv$close_time / divider(ohlcv$close_time), origin = "1970-01-01", tz = "UTC")
 
   # Remove files
   lapply(files, function(x) {
