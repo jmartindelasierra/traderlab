@@ -1,6 +1,6 @@
 Package: traderlab
 Title: Fast trading systems design
-Version: 0.0.0.9003
+Version: 0.0.0.9004
 Authors@R: 
     person("Jesús", "Martín de la Sierra", , "jesus.martinsierra@gmail.com", role = c("aut", "cre"))
 Description: This package allows a fast design, backtesting and analysis of trading strategies.

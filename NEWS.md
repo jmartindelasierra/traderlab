@@ -1,3 +1,11 @@
+# traderlab (0.0.0.9004)
+
+* Additions:
+  - New indicator: MFI (Money Flow Index)
+* Fixes:
+  - Conversion of open and close times in Binance data when they come with different accuracy
+  - daily_value calculation
+
 # traderlab (0.0.0.9003)
 
 * Additions:
