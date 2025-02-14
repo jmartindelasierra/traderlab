@@ -24,22 +24,5 @@ daily_value <- function(ohlcv_data, source, lag = 0) {
     dplyr::ungroup() |>
     dplyr::select(date_idx, value)
 
-  date_indexes <-
-    daily_values |>
-    dplyr::pull(date_idx) |>
-    unique()
-
-  if (lag > 0) {
-    date_indexes <-
-      date_indexes |>
-      utils::head(-lag)
-  }
-
-  values <-
-    daily_values |>
-    dplyr::filter(date_idx %in% date_indexes) |>
-    dplyr::pull(value)
-
-  c(rep(NA, nrow(daily_values) - length(values)), values)
-
+  daily_values$value[match(daily_values$date_idx - lag, daily_values$date_idx)]
 }
